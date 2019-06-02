@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_2"
+    android:background="@color/Blau_Hintergrund"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    tools:context=".ui.main.MainFragment">
+
+    <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/HscrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarAlwaysDrawHorizontalTrack="false">
+
+
+        <GridLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/GridLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:rowCount="4">
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/a1"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                tools:background="@null"
+                android:onClick="func_a1"
+                custom:onKeyLongPress="func_long_a1"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/a2"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_a2"
+                custom:onKeyLongPress="func_long_a2"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/a3"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_a3"
+                custom:onKeyLongPress="func_long_a3"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/a4"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_a4"
+                custom:onKeyLongPress="func_long_a4"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/b1"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_b1"
+                custom:onKeyLongPress="func_long_b1"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/b2"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_b2"
+                custom:onKeyLongPress="func_long_b2"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/b3"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_b3"
+                custom:onKeyLongPress="func_long_b3"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/b4"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_b4"
+                custom:onKeyLongPress="func_long_b4"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/c1"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_c1"
+                custom:onKeyLongPress="func_long_c1"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/c2"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_c2"
+                custom:onKeyLongPress="func_long_c2"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/c3"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_c3"
+                custom:onKeyLongPress="func_long_c3"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/c4"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_c4"
+                custom:onKeyLongPress="func_long_c4"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/d1"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_d1"
+                custom:onKeyLongPress="func_long_d1"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/d2"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_d2"
+                custom:onKeyLongPress="func_long_d2"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/d3"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_d3"
+                custom:onKeyLongPress="func_long_d3"/>
+
+            <net.juntermanns.mybuttons.MyEmojiButton
+                android:id="@+id/d4"
+                android:layout_gravity="start|top"
+                android:background="@null"
+                android:text="Button"
+                android:textColor="@android:color/white"
+                android:textSize="45dp"
+                android:onClick="func_d4"
+                custom:onKeyLongPress="func_long_d4"/>
+
+        </GridLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/HscrollView"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RANGE"
+            android:onClick="func_range"/>
+
+        <Button
+            android:id="@+id/btn_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEW" />
+
+        <Button
+            android:id="@+id/btn_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEXT" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+
