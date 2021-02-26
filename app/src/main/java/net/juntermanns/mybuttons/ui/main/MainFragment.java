@@ -2,7 +2,6 @@ package net.juntermanns.mybuttons.ui.main;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,11 +11,10 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.opengl.Visibility;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.text.emoji.widget.EmojiButton;
 import android.support.v4.provider.FontRequest;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.text.AlteredCharSequence;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -37,14 +34,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import net.juntermanns.mybuttons.ButtonColorAnimatorArrnummer;
 import net.juntermanns.mybuttons.ButtonColorAnimatorIndex;
 import net.juntermanns.mybuttons.MainActivity;
+import net.juntermanns.mybuttons.MusicPlayer;
 import net.juntermanns.mybuttons.MyEmojiButton;
 import net.juntermanns.mybuttons.MyMsgBox;
 import net.juntermanns.mybuttons.R;
@@ -53,34 +48,50 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.zip.Inflater;
 
-
-//import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
-//import static android.support.design.widget.Snackbar.LENGTH_LONG;
+import static android.graphics.Color.*;
 import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
-import static net.juntermanns.mybuttons.MainActivity.detail;
+import static java.lang.Math.random;
 import static net.juntermanns.mybuttons.MainActivity.mainfragment;
-import static net.juntermanns.mybuttons.MainActivity.gridLength;
-import static net.juntermanns.mybuttons.MainActivity.gameMode;
-import static net.juntermanns.mybuttons.MainActivity.numberMin;
-import static net.juntermanns.mybuttons.MainActivity.numberMax;
-import static net.juntermanns.mybuttons.MainActivity.buttonWidth;
-import static net.juntermanns.mybuttons.MainActivity.buttonHeight;
-import static net.juntermanns.mybuttons.MainActivity.emojiSize;
-import static net.juntermanns.mybuttons.MainActivity.retStr;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.africaMap;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.americaMap;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.animArrnummer;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.animIndex;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.asiaMap;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.buttonHeight;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.buttonWidth;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.detail;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.emojiSize;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.euroMap;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.bruchMap;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.gameMode;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.gridLength;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.arrnummer;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.index;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.numberMax;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.numberMin;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.retStr;
 
 public class MainFragment extends Fragment {
 
-    public MyEmojiButton[][] btnArr = new MyEmojiButton[gridLength][gridLength];
-    private MainViewModel mViewModel;
+    SoundPool mSound;
+    private static final String ARG_SECTION_NUMBER = "1";
+    public MyEmojiButton[][] btnArr = new MyEmojiButton[MyViewModel.gridLength][MyViewModel.gridLength];
     public View layout;
     private MyMsgBox messageBox;
     public MyEmojiButton a1;
+    public String amiFlag;
     MyEmojiButton a2;
     MyEmojiButton a3;
     MyEmojiButton a4;
@@ -132,98 +143,14 @@ public class MainFragment extends Fragment {
     Button renew;
     Button level;
     Button range;
-    ColorDrawable schwarz;
-    ColorDrawable rot;
-    ColorDrawable gelb;
-    ColorDrawable blau;
-    ColorDrawable hellblau;
-    ColorDrawable gruen;
-    ColorDrawable orange;
-    ColorDrawable weiss;
-
-    String deutschland;//= (String) getResources().getText(R.string.deutschland);
-    String italien;
-    String oesterreich;
-    String frankreich;
-    String bosnienherzegowina;
-    String belgien;
-    String bulgarien;
-    String tschechien;
-    String daenemark;
-    String spanien;
-    String finnland;
-    String vereinteskönigreich;
-    String griechenland;
-    String kroatien;
-    String ungarn;
-    String irland;
-    String liechtenstein;
-    String luxemburg;
-    String monaco;
-    String moldawien;
-    String montenegro;
-    String malta;
-    String polen;
-    String portugal;
-    String serbien;
-    String schweden;
-    String slowenien;
-    String slowakei;
-    String tuerkei;
-    String kosovo;
-    String albanien;
-    String andorra;
-    String estland;
-    String island;
-    String kasachstan;
-    String lettland;
-    String littauen;
-    String mazedonien;
-    String niederlande;
-    String norwegen;
-    String rumänien;
-    String russland;
-    String sanmarino;
-    String schweiz;
-    String ukraine;
-    String vatikan;
-    String belarus;
-    //---- Amerika  ohne kleine Inseln
-    String antiguaundbarbuda;
-    String argentinien;
-    String bahamas;
-    String barbados;
-    String belize;
-    String bolivien;
-    String brasilien;
-    String chile;
-    String costarica;
-    String dominica;
-    String dominikanischerepublik;
-    String elsalvador;
-    String equador;
-    String grenada;
-    String guatemala;
-    String guyana;
-    String haiti;
-    String honduras;
-    String jamaika;
-    String kanada;
-    String kolumbien;
-    String kuba;
-    String mexico;
-    String nicaragua;
-    String panama;
-    String paraguay;
-    String peru;
-    String stlittsundnevis;
-    String stluca;
-    String stvincent;
-    String suriname;
-    String trinidatundtobago;
-    String uruguay;
-    String venezuela;
-    String vereinigtestaaten;
+    ColorDrawable schwarz = new ColorDrawable();
+    ColorDrawable rot = new ColorDrawable();
+    ColorDrawable gelb = new ColorDrawable();
+    ColorDrawable blau = new ColorDrawable();
+    ColorDrawable hellblau = new ColorDrawable();
+    ColorDrawable gruen = new ColorDrawable();
+    ColorDrawable orange = new ColorDrawable();
+    ColorDrawable weiss = new ColorDrawable();
 
     String true_sonne;
     String true_cool;
@@ -270,52 +197,37 @@ public class MainFragment extends Fragment {
     String false_uebelkeit;
     String false_kotzen;
 
-    private int[] tempArr;
-    public String[] strArr;
     public String checkStr;
-    private List<Integer> tempSmallList;
     public int random_num;
     public int knopfNummer;
     public int knopfNummerAlt = 100;
     public int knopfNummer_lc;
     public int knopfNummerAlt_lc = 100;
-    long remainSec = 120L;
-    long warnSec = 10L;
-    int number;
-    public int[][] bigArr;
+    int answerrightcoin, answerrightcoinbling, answerrightblingy, answerrightflare, answerrightlaser, answerrightlaserbeam, answerrightlaserecho, answerrightpiggyoink = 0;
+    int answerwrongecho, answerwronghighdownbeep, answerwronghighdownwood, answerwronglowbuzzer, answerwrongmousefart, answerwrongsmallitch, answerwrongsounddumbexplosion, answerwronglamesiren = 0;
 
-    private int[] valueArr;
+    int[] soundArr = new int[16];
+
+    public int[][] bigArr;
 
     int punkte = 0;
     String selectedItem;
-    public int index = 0;
-    public int arrnummer = 0;
-   // int numberMin = 0;
-   // int numberMax = 100;
 
-    long oldLevelResult = 0L;
     ActionBar toolbar;
-    Map<String, Object[]> americaMap;
-    Map<String, Object[]> americaMapCopy;
-    Map<String, Object[]> euroMap;
-    Map<String, Object[]> euroMapCopy;
+    private MyViewModel mViewModel;
+
     Map<String, Object[]> gridMap;
-    Map<String, Object[]> bruchMap;
-    Map<String, Object[]> bruchMapCopy;
-    Map<String,String> trueMap;
-    Map<String,String> falseMap;
+    Map<String, String> trueMap;
+    Map<String, String> falseMap;
+    ArrayList<Integer> goodSoundsList = new ArrayList<>();
+    ArrayList<Integer> badSoundsList = new ArrayList<>();
+    ListIterator goodItr;
+    ListIterator badItr;
+
     Object[][] gridArr;
     Object[][][] bigObjectArr;
-    // ObjectAnimator colorAnim = null;
-    // ObjectAnimator colorAnim2 = null;
-    ButtonColorAnimatorIndex animIndex;
-    ButtonColorAnimatorArrnummer animArrnummer;
+
     public static Snackbar snackbar;
-    private Context mContext;
-    // public Activity mActivity;
-    public GridLayout mCLayout;
-    private Intent nextIntent;
-    //Integer sizedummy;
     Map<String, String> intToStringRangeMap = new HashMap<>();
     Random random = new Random();
     String randomKey;
@@ -325,20 +237,48 @@ public class MainFragment extends Fragment {
     HorizontalScrollView horizontalScrollView;
     Activity mActivity;
     int color;
-    View view;
-    View v;
-    MainFragment mainFragment;
-    private View builder;
-    AlertDialog.Builder okButton;
-    private float mx, my;
     private float curX, curY;
     int valueX;
-
     int valueY;
+    private MyMsgBox m;
+    final ViewGroup nullParent = null;
 
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = new MyViewModel();
+        AudioAttributes audioAttrib = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        mSound = new SoundPool.Builder().setAudioAttributes(audioAttrib).setMaxStreams(6).build();
+
+        answerrightcoin = mSound.load(getActivity(), R.raw.answerrightcoin, 1);
+        answerrightcoinbling = mSound.load(getActivity(), R.raw.answerrightcoinbling, 1);
+        answerrightblingy = mSound.load(getActivity(), R.raw.answerrightcoinblingy, 1);
+        answerrightflare = mSound.load(getActivity(), R.raw.answerrightflare, 1);
+        answerrightlaser = mSound.load(getActivity(), R.raw.answerrightlaser, 1);
+        answerrightlaserbeam = mSound.load(getActivity(), R.raw.answerrightlaserbeam, 1);
+        answerrightlaserecho = mSound.load(getActivity(), R.raw.answerrightlaserecho, 1);
+        answerrightpiggyoink = mSound.load(getActivity(), R.raw.answerrightlpiggyoinkwav, 1);
+        answerwrongecho = mSound.load(getActivity(), R.raw.answerwrongecho, 1);
+        answerwronghighdownbeep = mSound.load(getActivity(), R.raw.answerwronghighdownbeep, 1);
+        answerwronghighdownwood = mSound.load(getActivity(), R.raw.answerwronghighdownwood, 1);
+        answerwronglowbuzzer = mSound.load(getActivity(), R.raw.answerwronglowbuzzer, 1);
+        answerwrongmousefart = mSound.load(getActivity(), R.raw.answerwrongmousefart, 1);
+        answerwrongsmallitch = mSound.load(getActivity(), R.raw.answerwrongsmallitch, 1);
+        answerwrongsounddumbexplosion = mSound.load(getActivity(), R.raw.answerwrongsounddumbexplosion, 1);
+        answerwronglamesiren = mSound.load(getActivity(), R.raw.answerwrongsoundlamesiren, 1);
+
+        soundArr = new int[]{answerrightcoin, answerrightcoinbling, answerrightblingy, answerrightflare, answerrightlaser, answerrightlaserbeam, answerrightlaserecho, answerrightpiggyoink,
+                answerwrongecho, answerwronghighdownbeep, answerwronghighdownwood, answerwronglowbuzzer, answerwrongmousefart, answerwrongsmallitch, answerwrongsounddumbexplosion, answerwronglamesiren};
+
+
     }
 
     @Nullable
@@ -351,27 +291,35 @@ public class MainFragment extends Fragment {
                 "Noto Color Emoji Compat",
                 R.array.com_google_android_gms_fonts_certs);
 
-        EmojiCompat.Config config = new FontRequestEmojiCompatConfig(getActivity().getApplicationContext(), fontRequest);
+        EmojiCompat.Config config = new FontRequestEmojiCompatConfig(Objects.requireNonNull(getActivity()).getApplicationContext(), fontRequest);
         EmojiCompat.init(config);
-        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.carex);
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.zahlenbackgrnd);
         setButtonWidth(getActivity());
-        rot.setColor(Color.RED);
-        schwarz.setColor(Color.BLACK);
-        gelb.setColor(Color.YELLOW);
-        weiss.setColor(Color.WHITE);
-        orange.setColor(Color.argb(255,255,128,0));
-        blau.setColor(Color.BLUE);
-        hellblau.setColor(Color.argb(255,0,102,204));
+        rot.setColor(RED);
+        schwarz.setColor(BLACK);
+        gelb.setColor(YELLOW);
+        weiss.setColor(WHITE);
+        orange.setColor(argb(255, 255, 128, 0));
+        blau.setColor(BLUE);
+        hellblau.setColor(argb(255, 0, 102, 204));
 
-        redDrawable.setColor(Color.RED);
-        greenDrawable.setColor(Color.GREEN);
+        redDrawable.setColor(RED);
+        greenDrawable.setColor(GREEN);
         //Toast.makeText(getActivity(),setButtonWidth(getActivity()),LENGTH_LONG).show();
         mActivity = getActivity();
 
-        switch (gridLength) {
+        //TODO get cooler !
+        // gridLength = randomWithRange(4,7);
+        GameMode.initGameMap(gameMode);
+        MyViewModel.titleBarString = gameMode.setStatus(randomWithRange(1, 14)); // Automatisches setzen von Überschrift
+
+        switch (MyViewModel.gridLength) {
             case 3:
-                layout = inflater.inflate(R.layout.main_fragment, null);
+                layout = inflater.inflate(R.layout.main_fragment, nullParent);
                 horizontalScrollView = layout.findViewById(R.id.HscrollView);
+
+                horizontalScrollView.scrollTo(0, 100);
+
                 a1 = layout.findViewById(R.id.a1);
                 a2 = layout.findViewById(R.id.a2);
                 a3 = layout.findViewById(R.id.a3);
@@ -381,16 +329,24 @@ public class MainFragment extends Fragment {
                 c1 = layout.findViewById(R.id.c1);
                 c2 = layout.findViewById(R.id.c2);
                 c3 = layout.findViewById(R.id.c3);
-                renew = layout.findViewById(R.id.btn_new);
-                level = layout.findViewById(R.id.btn_level);
+
                 range = layout.findViewById(R.id.btn_range);
-               // messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
-
+                // messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
                 btnArr = new MyEmojiButton[][]{{a1, a2, a3}, {b1, b2, b3}, {c1, c2, c3}};
-
+               /* if (MyViewModel.emojiArray[0][0] != MyViewModel.emojiArray[gridLength-1][gridLength-1]) {
+                    try {
+                        for (int i = 0; i < MyViewModel.gridLength; i++) {
+                            for (int e = 0; e < MyViewModel.gridLength; e++) {
+                                btnArr[i][e].setText(MyViewModel.emojiArray[i][e]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
                 break;
             case 4:
-                layout = inflater.inflate(R.layout.main_fragment2, null);
+                layout = inflater.inflate(R.layout.main_fragment2, nullParent);
                 horizontalScrollView = layout.findViewById(R.id.HscrollView);
                 a1 = layout.findViewById(R.id.a1);
                 a2 = layout.findViewById(R.id.a2);
@@ -408,15 +364,24 @@ public class MainFragment extends Fragment {
                 d2 = layout.findViewById(R.id.d2);
                 d3 = layout.findViewById(R.id.d3);
                 d4 = layout.findViewById(R.id.d4);
-                renew = layout.findViewById(R.id.btn_new);
-                level = layout.findViewById(R.id.btn_level);
+
                 range = layout.findViewById(R.id.btn_range);
-                //messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
 
                 btnArr = new MyEmojiButton[][]{{a1, a2, a3, a4}, {b1, b2, b3, b4}, {c1, c2, c3, c4}, {d1, d2, d3, d4}};
+                /*if (MyViewModel.emojiArray[0][0] != MyViewModel.emojiArray[gridLength-1][gridLength-1]) {
+                    try {
+                        for (int i = 0; i < MyViewModel.gridLength; i++) {
+                            for (int e = 0; e < MyViewModel.gridLength; e++) {
+                                btnArr[i][e].setText(MyViewModel.emojiArray[i][e]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
                 break;
             case 5:
-                layout = inflater.inflate(R.layout.main_fragment3, null);
+                layout = inflater.inflate(R.layout.main_fragment3, nullParent);
                 horizontalScrollView = layout.findViewById(R.id.HscrollView);
                 a1 = layout.findViewById(R.id.a1);
                 a2 = layout.findViewById(R.id.a2);
@@ -443,15 +408,23 @@ public class MainFragment extends Fragment {
                 e3 = layout.findViewById(R.id.e3);
                 e4 = layout.findViewById(R.id.e4);
                 e5 = layout.findViewById(R.id.e5);
-                renew = layout.findViewById(R.id.btn_new);
-                level = layout.findViewById(R.id.btn_level);
                 range = layout.findViewById(R.id.btn_range);
                 //messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
-
                 btnArr = new MyEmojiButton[][]{{a1, a2, a3, a4, a5}, {b1, b2, b3, b4, b5}, {c1, c2, c3, c4, c5}, {d1, d2, d3, d4, d5}, {e1, e2, e3, e4, e5}};
+                /*if (MyViewModel.emojiArray[0][0] != MyViewModel.emojiArray[gridLength-1][gridLength-1]) {
+                    try {
+                        for (int i = 0; i < MyViewModel.gridLength; i++) {
+                            for (int e = 0; e < MyViewModel.gridLength; e++) {
+                                btnArr[i][e].setText(MyViewModel.emojiArray[i][e]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
                 break;
             case 6:
-                layout = inflater.inflate(R.layout.main_fragment4, null);
+                layout = inflater.inflate(R.layout.main_fragment4, nullParent);
                 horizontalScrollView = layout.findViewById(R.id.HscrollView);
                 a1 = layout.findViewById(R.id.a1);
                 a2 = layout.findViewById(R.id.a2);
@@ -489,14 +462,27 @@ public class MainFragment extends Fragment {
                 f4 = layout.findViewById(R.id.f4);
                 f5 = layout.findViewById(R.id.f5);
                 f6 = layout.findViewById(R.id.f6);
-                renew = layout.findViewById(R.id.btn_new);
-                level = layout.findViewById(R.id.btn_level);
+
                 range = layout.findViewById(R.id.btn_range);
                 //messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
                 btnArr = new MyEmojiButton[][]{{a1, a2, a3, a4, a5, a6}, {b1, b2, b3, b4, b5, b6}, {c1, c2, c3, c4, c5, c6}, {d1, d2, d3, d4, d5, d6}, {e1, e2, e3, e4, e5, e6}, {f1, f2, f3, f4, f5, f6}};
+
+               /* if (MyViewModel.emojiArray[0][0] != MyViewModel.emojiArray[gridLength][gridLength]) {
+                    try {
+                        for (int i = 0; i < MyViewModel.gridLength; i++) {
+                            for (int e = 0; e < MyViewModel.gridLength; e++) {
+                                btnArr[i][e].setText(MyViewModel.emojiArray[i][e]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }*/
+
                 break;
             case 7:
-                layout = inflater.inflate(R.layout.main_fragment5, null);
+                layout = inflater.inflate(R.layout.main_fragment5, nullParent);
                 horizontalScrollView = layout.findViewById(R.id.HscrollView);
                 a1 = layout.findViewById(R.id.a1);
                 a2 = layout.findViewById(R.id.a2);
@@ -547,16 +533,33 @@ public class MainFragment extends Fragment {
                 g5 = layout.findViewById(R.id.g5);
                 g6 = layout.findViewById(R.id.g6);
                 g7 = layout.findViewById(R.id.g7);
-                renew = layout.findViewById(R.id.btn_new);
-                level = layout.findViewById(R.id.btn_level);
+
                 range = layout.findViewById(R.id.btn_range);
                 //messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
                 btnArr = new MyEmojiButton[][]{{a1, a2, a3, a4, a5, a6, a7}, {b1, b2, b3, b4, b5, b6, b7}, {c1, c2, c3, c4, c5, c6, c7}, {d1, d2, d3, d4, d5, d6, d7}, {e1, e2, e3, e4, e5, e6, e7}, {f1, f2, f3, f4, f5, f6, f7}, {g1, g2, g3, g4, g5, g6, g7}};
+
+                //TODO   EuroMap und Americap sind < 49 Felder ! **//
+
+                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(random.nextBoolean() ? 1 : 3);
+
+
+
+               /* if (MyViewModel.emojiArray != null && MyViewModel.gridLength == MyViewModel.emojiArray[0].length) {
+                    try {
+                        for (int i = 0; i < MyViewModel.gridLength; i++) {
+                            for (int e = 0; e < MyViewModel.gridLength; e++) {
+                                btnArr[i][e].setText(MyViewModel.emojiArray[i][e]);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
         }
         try {
-            for (int i = 0; i < gridLength; i++) {
-                for (int e = 0; e < gridLength; e++) {
+            for (int i = 0; i < MyViewModel.gridLength; i++) {
+                for (int e = 0; e < MyViewModel.gridLength; e++) {
                     btnArr[i][e].setWidth(buttonWidth);
                     btnArr[i][e].setHeight(buttonHeight);
                     btnArr[i][e].setTextSize(emojiSize);
@@ -564,100 +567,85 @@ public class MainFragment extends Fragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+
+                //   if (MyViewModel.emojiArray[0][0] == null || (MyViewModel.emojiArray[0].length < MyViewModel.gridLength)) {
+
+                //   } else {
+                //    startGame();
         }
-        layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
-        btnArr = generateGameSet(getColorTheme(), detail);
-       // m = new MyMsgBox(getContext(), 800, Gravity.BOTTOM);
-        //a1.callOnClick();
+        btnArr = generateGameSet(getColorTheme(), gameMode.getDetail());
+
         return layout;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        //m = new MyMsgBox(getContext(), 800, Gravity.BOTTOM);
+        startGame();
         a1.callOnClick();
-        // TODO: Use the ViewModel
+
     }
 
     public MyEmojiButton[][] generateGameSet(int color, int detail) {
 
-        switch (gameMode) {
+        bitmap = BitmapFactory.decodeResource(Objects.requireNonNull(getActivity()).getResources(), R.drawable.zahlenbackgrnd);
+
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
                 btnArr = generateFields(getColorTheme()); // Zahlenspiel
-                //   Snackbar.make(layout,getResources().getString(R.string.landesflaeche),
-                //           LENGTH_INDEFINITE).show();
-                //snackBarShow();
-                bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.zahlenbackgrnd);
-                //reactionButton.setText(retStr); testing Custom Toast
-
                 break;
-            case 2: //Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.planeta_terra_ga7);
-            case 4: //Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.planeta_terra_ga7);
-            case 5: // Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.planeta_terra_ga7);
-            case 6: //Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.planeta_terra_ga7);
-                btnArr = generateFlags(getColorTheme());
-                //   Snackbar.make(layout,getResources().getString(R.string.landesflaeche),
-                //           LENGTH_INDEFINITE).show();
-                //snackBarShow();
-                bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.carex);
-                //reactionButton.setText(retStr);
-
-
+            case 2:
+            case 4:
+            case 5:
+            case 6:
+                btnArr = generateEuroFlags(getColorTheme());
                 break;
             case 3:
-                btnArr = generateFract(getColorTheme()); // Brüche vergleichen
-                //   Snackbar.make(layout,"Tippe auf den größeren Bruck",
-                //           LENGTH_INDEFINITE).show();
-                //snackBarShow();
-                //reactionButton.setText(retStr);
+                btnArr = generateFract(getColorTheme());
                 break;
             case 7:
             case 8:
             case 9:
             case 10:
                 btnArr = generateAmericaFlags(getColorTheme());
-                //snackBarShow();
-               // reactionButton.setText(retStr);
-
-
                 break;
+            case 11:
+            case 12:
+                btnArr = generateAsiaFlags(getColorTheme());
+                break;
+            case 13:
+            case 14:
+                btnArr = generateAfricaFlags(getColorTheme());
+
         }
-        //snackBarShow();  makes it die
-        layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        layout.setBackground(new BitmapDrawable(bitmap));
         return btnArr;
     }
 
+
     public MyEmojiButton[][] generateFields(int color) {  //Zahlenfelder
 
-        bigArr = new int[gridLength][gridLength];
-        valueArr = new int[gridLength * gridLength];
-        if(numberMax < gridLength*gridLength) numberMax = gridLength*gridLength;
+        bigArr = new int[MyViewModel.gridLength][MyViewModel.gridLength];
+        int[] valueArr = new int[MyViewModel.gridLength * MyViewModel.gridLength];
+        if (numberMax < MyViewModel.gridLength * MyViewModel.gridLength)
+            numberMax = MyViewModel.gridLength * MyViewModel.gridLength;
         numberMin = 0;
-        // numberMax = 100;
-
-        // color = (getResources().getColor(R.color.Blau_Hintergrund));
-
-        // view = this.getCurrentFocus();
 
         String numberAsString;
-        //bigArr = new int[gridLength][gridLength];
-
         List<int[]> tempBigList;
 
-        //btnArr = new Button[gridLength][gridLength];
-        //numberBoolArr = new boolean[gridLength][gridLength];
         tempBigList = new ArrayList<>();
-        tempSmallList = new ArrayList<>();
-        tempArr = new int[gridLength];
+        List<Integer> tempSmallList1 = new ArrayList<>();
+        int[] tempArr = new int[MyViewModel.gridLength];
         intToStringRangeMap.clear();
 
         ArrayList<String> tempSmallList = new ArrayList<>();
 
         intToStringRangeMap.clear();
 
-        while (intToStringRangeMap.size() <= (gridLength * gridLength)) {
+        while (intToStringRangeMap.size() <= (MyViewModel.gridLength * MyViewModel.gridLength)) {
             int valueTemp = (randomWithRange(numberMin, numberMax));
             String keyTemp = "" + valueTemp;
             if (!intToStringRangeMap.containsValue(valueTemp)) {
@@ -666,22 +654,20 @@ public class MainFragment extends Fragment {
         }
 
         try {
-
-            for (int i = 0; i < (gridLength * gridLength); i++) {
+            for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
 
                 List<String> keys = new ArrayList<>(intToStringRangeMap.keySet());
-                randomKey = keys.get(random.nextInt(keys.size())& Integer.MAX_VALUE);
+                randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);
                 numberAsString = intToStringRangeMap.get(randomKey);
                 intToStringRangeMap.remove(numberAsString);
 
                 valueArr[i] = Integer.parseInt(numberAsString);
             }
 
-            //btnArr = bigBtnArr[gridLength-3];
 
-            for (int it = 0; it < (gridLength * gridLength); it++) {
+            for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
                 tempSmallList.add(String.valueOf(valueArr[it]));
-                if (it > 0 && mod(it + 1, gridLength) == 0) {
+                if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
                     tempArr = new int[tempSmallList.size()];
                     for (int i = 0; i < tempSmallList.size(); i++)
                         tempArr[i] = Integer.parseInt(tempSmallList.get(i));
@@ -690,7 +676,6 @@ public class MainFragment extends Fragment {
                 }
             }
             for (int i = 0; i < tempBigList.size(); i++) bigArr[i] = tempBigList.get(i);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -701,7 +686,6 @@ public class MainFragment extends Fragment {
                 for (int e = 0; e < bigArr[0].length; e++) {
                     btnArr[i][e].setText(String.valueOf(bigArr[i][e]));
                     btnArr[i][e].setTextSize(45);
-
                     btnArr[i][e].setBackgroundColor(color);
                 }
             }
@@ -712,101 +696,41 @@ public class MainFragment extends Fragment {
         index = 0;
         arrnummer = 0;
 
-        btnArr[arrnummer][index].setTextColor(Color.GREEN);
-        //activateButtons();
-
-        animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer][index + 1]);
-        animIndex.invokeColorTextAnimationIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer.invokeColorTextAnimationArrnummer(btnArr[arrnummer + 1][index]);
-
-        btnArr[arrnummer][index + 1].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
-        btnArr[arrnummer + 1][index].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
-        //snackBarShow();
         return btnArr;
     }
 
     public MyEmojiButton[][] generateFract(int color) {
 
-        bruchMap = new HashMap<>();
-        bruchMap.put("0", new Object[]{" 1/2 ", 0.5});
-        bruchMap.put("1", new Object[]{" 1/3 ", 0.33333});
-        bruchMap.put("2", new Object[]{" 2/5 ", 0.4});
-        bruchMap.put("3", new Object[]{" 3/5 ", 0.6});
-        bruchMap.put("4", new Object[]{" 7/8 ", 0.875});
-        bruchMap.put("5", new Object[]{" 9/10 ", 0.9});
-        bruchMap.put("6", new Object[]{" 3/4 ", 0.75});
-        bruchMap.put("7", new Object[]{" 6/7 ", 0.857});
-        bruchMap.put("8", new Object[]{" 4/9 ", 0.44444});
-        bruchMap.put("9", new Object[]{" 1/8 ", 0.125});
-        bruchMap.put("10", new Object[]{" 3/8 ", 0.375});
-        bruchMap.put("11", new Object[]{" 1/5 ", 0.2});
-        bruchMap.put("12", new Object[]{" 1/9 ", 0.11111});
-        bruchMap.put("13", new Object[]{" 1/6 ", 0.16});
-        bruchMap.put("14", new Object[]{" 2/3 ", 0.66666});
-        bruchMap.put("15", new Object[]{" 1/10", 0.1});
-        bruchMap.put("16", new Object[]{" 4/5 ", 0.8});
-        bruchMap.put("17", new Object[]{" 5/6 ", 0.83333});
-        bruchMap.put("18", new Object[]{" 1/4 ", 0.25});
-        bruchMap.put("19", new Object[]{" 1/1 ", 1.0});
-        bruchMap.put("20", new Object[]{" 3/7 ", 0.42857});
-        bruchMap.put("21", new Object[]{" 5/7 ", 0.71428});
-        bruchMap.put("22", new Object[]{" 5/8 ", 0.625});
-        bruchMap.put("23", new Object[]{" 2/4 ", 0.5});
-        bruchMap.put("24", new Object[]{" 3/9 ", 0.33333});
-        bruchMap.put("25", new Object[]{" 5/2 ", 2.5});
-        bruchMap.put("26", new Object[]{" 3/2 ", 1.5});
-        bruchMap.put("27", new Object[]{" 5/3 ", 1.66666});
-        bruchMap.put("28", new Object[]{" 5/4 ", 1.25});
-        bruchMap.put("29", new Object[]{" 7/4 ", 1.75});
-        bruchMap.put("30", new Object[]{" 4/1 ", 4.0});
-        bruchMap.put("31", new Object[]{" 1/7 ", 0.14287});
-        bruchMap.put("32", new Object[]{" 2/7 ", 0.28571});
-        bruchMap.put("33", new Object[]{" 7/2 ", 3.5});
-        bruchMap.put("34", new Object[]{"13/15", 0.76470});
-        bruchMap.put("35", new Object[]{"15/17", 0.88235});
-        bruchMap.put("36", new Object[]{" 1/11", 0.09090});
-        bruchMap.put("37", new Object[]{" 2/11", 0.18181});
-        bruchMap.put("38", new Object[]{" 3/13", 0.23076});
-        bruchMap.put("39", new Object[]{" 3/11", 0.27272});
-        bruchMap.put("40", new Object[]{" 3/10", 0.3});
-        bruchMap.put("41", new Object[]{"17/13", 1.30769});
-        bruchMap.put("42", new Object[]{" 7/10", 0.7});
-        bruchMap.put("43", new Object[]{" 2/13", 0.15384});
-        bruchMap.put("44", new Object[]{" 4/13", 0.30769});
-        bruchMap.put("45", new Object[]{" 7/12", 0.58333});
-        bruchMap.put("46", new Object[]{" 5/12", 0.41666});
-        bruchMap.put("47", new Object[]{"11/13", 0.84615});
-        bruchMap.put("48", new Object[]{"13/11", 1.18181});
-        bruchMap.put("43", new Object[]{" 15/9", 1.66666});
+        bruchMap.getBruchMap(bruchMap);
+        BruchMap bruchMapCopy = bruchMap;
 
         List<String> strTempSmallList = new ArrayList<>(); // ähnlich generateFields(), aber Strings nicht int !!!
         List<Object> objTempSmallList = new ArrayList<>();
         List<String[]> strTempBigList = new ArrayList<>();
         List<Object[]> objTempBigList = new ArrayList<>();
-        String[] btnStrArr = new String[gridLength * gridLength];
-        Object[] objArr = new Object[gridLength * gridLength];
-        String[][] bigStringArr = new String[gridLength][gridLength];
-        bigObjectArr = new Object[gridLength][gridLength][2];
+        String[] btnStrArr = new String[MyViewModel.gridLength * MyViewModel.gridLength];
+        Object[] objArr = new Object[MyViewModel.gridLength * MyViewModel.gridLength];
+        String[][] bigStringArr = new String[MyViewModel.gridLength][MyViewModel.gridLength];
+        bigObjectArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength][2];
         bruchMapCopy = bruchMap;
 
-        for (int i = 0; i < (gridLength * gridLength); i++) {
+        for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
 
-            List<String> keys = new ArrayList<>(bruchMap.keySet());                  //Hash keys liste von euromap
-            randomKey = keys.get(random.nextInt(keys.size())& Integer.MAX_VALUE);                      // Zufällig key nehmen
-            String flag = (String) bruchMap.get(String.valueOf(randomKey))[0];       // Value nehmen aus euromap
-            objArr[i] = bruchMap.get(String.valueOf(randomKey));  //ganzes Array
+            List<String> keys = new ArrayList<>(BruchMap.bMap.keySet());                  //Hash keys liste von euromap
+            randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);                      // Zufällig key nehmen
+            String flag = (String) BruchMap.bMap.get(String.valueOf(randomKey))[0];       // Value nehmen aus euromap
+            objArr[i] = BruchMap.bMap.get(String.valueOf(randomKey));  //ganzes Array
             btnStrArr[i] = flag;                                 // eindimensionales array besiedeln
-            bruchMap.remove(randomKey);                           // euromap verkleinern (unique Values)
+            BruchMap.bMap.remove(randomKey);                           // euromap verkleinern (unique Values)
         }
         bruchMap = bruchMapCopy;
-        bruchMapCopy.clear();
+        bruchMap.bMap.clear();
 
-        for (int it = 0; it < (gridLength * gridLength); it++) {
+        for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
             strTempSmallList.add(btnStrArr[it]);
             objTempSmallList.add(objArr[it]);
-            //  if(it == 0||it < gridLength) bigObjectArr[0][it]= (objArr[it]);
-            if (it > 0 && mod(it + 1, gridLength) == 0) {
+            //  if(it == 0||it < MyViewModel.gridLength) bigObjectArr[0][it]= (objArr[it]);
+            if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
                 String[] strTempArr = new String[strTempSmallList.size()];
                 Object[] objTempArr = new Object[objTempSmallList.size()];
 
@@ -827,7 +751,10 @@ public class MainFragment extends Fragment {
         for (int i = 0; i < strTempBigList.size(); i++) {
             for (int j = 0; j < objTempBigList.size(); j++) {
                 bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
-                btnArr[i][j].setText((String) bigObjectArr[i][j][0]);
+                String tempStr = (String) bigObjectArr[i][j][0];
+                //btnArr[i][j].setText(tempStr);
+                MyViewModel.emojiArray[i][j] = tempStr;
+                btnArr[i][j].setText(MyViewModel.emojiArray[i][j]);
                 btnArr[i][j].setWidth(450);  // reicht bei 5 Stellen ,aber knapp
             }
         }
@@ -835,149 +762,134 @@ public class MainFragment extends Fragment {
         index = 0;
         arrnummer = 0;
 
-        btnArr[arrnummer][index].setTextColor(Color.GREEN);
-        //activateButtons();
-        animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer][index + 1]);
-        animIndex.invokeColorTextAnimationIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer.invokeColorTextAnimationArrnummer(btnArr[arrnummer + 1][index]);
-
-        btnArr[arrnummer][index + 1].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
-        btnArr[arrnummer + 1][index].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
-        //snackBarShow();
         return btnArr;
     }
 
-    public MyEmojiButton[][] generateFlags(int color) {    //Flaggenfelder
+    public MyEmojiButton[][] generateEuroFlags(int color) {    //Flaggenfelder
+        if (MyViewModel.gridLength * MyViewModel.gridLength > 36) {
+            btnArr = generateGameSet(getColorTheme(), gameMode.getDetail());
+        } else {
+            EuroMap euroMapCopy;
 
-        euroMap = new HashMap<>();
-        euroMapCopy = new HashMap<>();
+            try {
+                euroMap.getEuroMap(euroMap);
+                euroMapCopy = euroMap;
+            } catch (NullPointerException npe) {
+                npe.printStackTrace();
+            }
+            gridMap = new HashMap<>();
+            gridArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength];
+
+
+            //this.detail = detail;
+            List<String> strTempSmallList = new ArrayList<>(); // ähnlich generateFields(), aber Strings nicht int !!!
+            List<Object> objTempSmallList = new ArrayList<>();
+            List<String[]> strTempBigList = new ArrayList<>();
+            List<Object[]> objTempBigList = new ArrayList<>();
+            String[] btnStrArr = new String[MyViewModel.gridLength * MyViewModel.gridLength];
+            Object[] objArr = new Object[MyViewModel.gridLength * MyViewModel.gridLength];
+            String[][] bigStringArr = new String[MyViewModel.gridLength][MyViewModel.gridLength];
+            bigObjectArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength][8];
+            euroMapCopy = euroMap;
+
+            for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
+                List<String> keys = new ArrayList<>(EuroMap.eMap.keySet());                  //Hash keys liste von euromap
+                randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);                      // Zufällig key nehmen
+                String flag = (String) (Objects.requireNonNull(EuroMap.eMap.get(String.valueOf(randomKey))))[0];       // Value nehmen aus euromap
+                objArr[i] = EuroMap.eMap.get(String.valueOf(randomKey));  //ganzes Array
+                btnStrArr[i] = flag;                                 // eindimensionales array besiedeln
+                EuroMap.eMap.remove(randomKey);                           // euromap verkleinern (unique Values)
+            }
+            euroMap = euroMapCopy;
+            EuroMap.eMap.clear();
+
+            for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
+                strTempSmallList.add(btnStrArr[it]);
+                objTempSmallList.add(objArr[it]);
+                //  if(it == 0||it < MyViewModel.gridLength) bigObjectArr[0][it]= (objArr[it]);
+                if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
+                    String[] strTempArr = new String[strTempSmallList.size()];
+                    Object[] objTempArr = new Object[objTempSmallList.size()];
+
+                    for (int i = 0; i < strTempSmallList.size(); i++) {
+                        strTempArr[i] = strTempSmallList.get(i);
+                        objTempArr[i] = objTempSmallList.get(i);
+                    }
+                    strTempBigList.add(strTempArr);
+                    objTempBigList.add(objTempArr);
+                    strTempSmallList.clear();
+                    objTempSmallList.clear();
+                }
+            }
+            for (int i = 0; i < strTempBigList.size(); i++) {
+                bigStringArr[i] = strTempBigList.get(i);
+            }
+            try {
+                for (int i = 0; i < strTempBigList.size(); i++) {
+                    for (int j = 0; j < objTempBigList.size(); j++) {
+                        bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
+                        String tempStr = (String) bigObjectArr[i][j][0];
+                        //btnArr[i][j].setText(tempStr);
+                        MyViewModel.emojiArray[i][j] = (String) bigObjectArr[i][j][0];
+                        btnArr[i][j].setText(MyViewModel.emojiArray[i][j]);
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException aiobe) {
+                aiobe.printStackTrace();
+            }
+            index = 0;
+            arrnummer = 0;
+        }
+        return btnArr;
+    }
+
+    public MyEmojiButton[][] generateAfricaFlags(int color) {
+        //Flaggenfelder
+
+        AfricaMap africaMapCopy;
+        try {
+            AfricaMap.getAfricaMap(africaMap);
+        } catch (Exception npe) {
+            npe.printStackTrace();
+        }
+
         gridMap = new HashMap<>();
-        gridArr = new Object[gridLength][gridLength];
-
-        deutschland = (String) getActivity().getResources().getText(R.string.deutschland);
-        italien = (String) getActivity().getResources().getText(R.string.italien);
-        oesterreich = (String) getActivity().getResources().getText(R.string.österreich);
-        frankreich = (String) getActivity().getResources().getText(R.string.frankreich);
-        bosnienherzegowina = (String) getActivity().getResources().getText(R.string.bosnienherzegowina);
-        belgien = (String) getActivity().getResources().getText(R.string.belgien);
-        bulgarien = (String) getActivity().getResources().getText(R.string.bulgarien);
-        tschechien = (String) getActivity().getResources().getText(R.string.tschechien);
-        daenemark = (String) getActivity().getResources().getText(R.string.dänemark);
-        spanien = (String) getActivity().getResources().getText(R.string.spanien);
-        finnland = (String) getActivity().getResources().getText(R.string.finnland);
-        vereinteskönigreich = (String) getActivity().getResources().getText(R.string.vereinteskönigreich);
-        griechenland = (String) getActivity().getResources().getText(R.string.griechenland);
-        kroatien = (String) getActivity().getResources().getText(R.string.kroatien);
-        ungarn = (String) getActivity().getResources().getText(R.string.ungarn);
-        irland = (String) getActivity().getResources().getText(R.string.irland);
-        liechtenstein = (String) getActivity().getResources().getText(R.string.liechtenstein);
-        luxemburg = (String) getActivity().getResources().getText(R.string.luxemburg);
-        monaco = (String) getActivity().getResources().getText(R.string.monaco);
-        moldawien = (String) getActivity().getResources().getText(R.string.moldawien);
-        montenegro = (String) getActivity().getResources().getText(R.string.montenegro);
-        malta = (String) getActivity().getResources().getText(R.string.malta);
-        polen = (String) getActivity().getResources().getText(R.string.polen);
-        portugal = (String) getActivity().getResources().getText(R.string.portugal);
-        serbien = (String) getActivity().getResources().getText(R.string.serbien);
-        slowenien = (String) getActivity().getResources().getText(R.string.slowenien);
-        slowakei = (String) getActivity().getResources().getText(R.string.slowakei);
-        tuerkei = (String) getActivity().getResources().getText(R.string.türkei);
-        kosovo = (String) getActivity().getResources().getText(R.string.kosovo);
-        albanien = (String) getActivity().getResources().getText(R.string.albanien);
-        andorra = (String) getActivity().getResources().getText(R.string.andorra);
-        estland = (String) getActivity().getResources().getText(R.string.estland);
-        island = (String) getActivity().getResources().getText(R.string.island);
-        kasachstan = (String) getActivity().getResources().getText(R.string.kasachstan);
-        lettland = (String) getActivity().getResources().getText(R.string.lettland);
-        littauen = (String) getActivity().getResources().getText(R.string.littauen);
-        mazedonien = (String) getActivity().getResources().getText(R.string.mazedonien);
-        niederlande = (String) getActivity().getResources().getText(R.string.niederlande);
-        norwegen = (String) getActivity().getResources().getText(R.string.norwegen);
-        rumänien = (String) getActivity().getResources().getText(R.string.rumänien);
-        russland = (String) getActivity().getResources().getText(R.string.russland);
-        sanmarino = (String) getActivity().getResources().getText(R.string.sanmarino);
-        schweden = (String) getActivity().getResources().getText(R.string.schweden);
-        schweiz = (String) getActivity().getResources().getText(R.string.schweiz);
-        ukraine = (String) getActivity().getResources().getText(R.string.ukraine);
-        vatikan = (String) getActivity().getResources().getText(R.string.vatikan);
-        belarus = (String) getActivity().getResources().getText(R.string.belarus);
-
-        euroMap.put("0", new Object[]{deutschland, "Deutschland", "Berlin", 357093, 81882000, "Mitteleuropa", 100.0, true,new Object[]{schwarz,rot,gold}});
-        euroMap.put("1", new Object[]{italien, "Italien", "Rom", 301336, 60246000, "Südeuropa", 100.0, true});
-        euroMap.put("2", new Object[]{oesterreich, "Österreich", "Wien", 83871, 8488000, "Mitteleuropa", 100.0, true});
-        euroMap.put("3", new Object[]{frankreich, "Frankreich", "Paris", 543965, 62793000, "Westeuropa", 100.0, true});
-        euroMap.put("4", new Object[]{bosnienherzegowina, "Bosnien und Herzegowina", "Sarajevo", 51197, 379100.00, "Südosteuropa", 100.0, false});
-        euroMap.put("5", new Object[]{belgien, "Belgien", "Brüssel", 32528, 10667000, "Westeuropa", 100.0, true});
-        euroMap.put("6", new Object[]{bulgarien, "Bulgarien", "Sofia", 110994, 7365000, "Südosteuropa", 100.0, true});
-        euroMap.put("7", new Object[]{tschechien, "Tschechien", "Prag", 78866, 10526000, "Mitteleuropa", 100.0, true});
-        euroMap.put("8", new Object[]{albanien, "Albanien", "Tirana", 28748, 3170000, "Südosteuropa", 100.0, false});
-        euroMap.put("9", new Object[]{andorra, "Andorra", "Andorra la Vella", 468, 83900, "Südwesteuropa", 100.0, false});
-        euroMap.put("10", new Object[]{daenemark, "Dänemark", "Kopenhagen", 43098, 5476000, "Nordeuropa", 100.0, true});
-        euroMap.put("11", new Object[]{estland, "Estland", "Tallinn", 45227, 1342000, "Nordosteuropa", 100.0, true});
-        euroMap.put("12", new Object[]{finnland, "Finnland", "Helsinki", 338144, 5326000, "Nordeuropa", 100.0, true});
-        euroMap.put("13", new Object[]{griechenland, "Griechenland", "Athen", 131957, 11142000, "Südosteuropa", 100.0, true});
-        euroMap.put("14", new Object[]{irland, "Irland", "Dublin", 70273, 458100, "Nordwesteuropa", 100.0, true});
-        euroMap.put("15", new Object[]{island, "Island", "Reykjavík", 103000, 318000, "Nordeuropa", 100.0, true});
-        // euroMap.put("16", new Object[]{kasachstan, "Kasachstan", "Astana", 2724900, 18157078, "Osteuropa", 5.4, false});
-        euroMap.put("17", new Object[]{kosovo, "Kosovo", "Priština", 10908, 1800000, "Südosteuropa", 100.0, false});
-        euroMap.put("18", new Object[]{kroatien, "Kroatien", "Zagreb", 56542, 4480000, "Südosteuropa", 100.0, true});
-        euroMap.put("19", new Object[]{lettland, "Lettland", "Riga", 64589, 2075000, "Nordosteuropa", 100.0, true});
-        euroMap.put("20", new Object[]{liechtenstein, "Liechtenstein", "Vaduz", 160, 36000, "Mitteleuropa", 100.0, false});
-        euroMap.put("21", new Object[]{littauen, "Litauen", "Vilnius", 65301, 298100, "Nordosteuropa", 100.0, true});
-        euroMap.put("22", new Object[]{luxemburg, "Luxemburg", "Luxemburg", 2586, 537000, "Westeuropa", 100.0, true});
-        euroMap.put("23", new Object[]{malta, "Malta", "Valletta", 316, 417000, "Südeuropa", 100.0, true});
-        euroMap.put("24", new Object[]{mazedonien, "Mazedonien", "Skopje", 25713, 2057000, "Südosteuropa", 100.0, false});
-        euroMap.put("25", new Object[]{moldawien, "Moldawien", "Kischinau", 33843, 3154000, "Südosteuropa", 100.0, false});
-        euroMap.put("26", new Object[]{monaco, "Monaco", "Montecarlo", 2, 36000, "Südeuropa", 100.0, false});
-        euroMap.put("27", new Object[]{montenegro, "Montenegro", "Podgorica", 13812, 625000, "Südosteuropa", 100.0, false});
-        euroMap.put("28", new Object[]{niederlande, "Niederlande", "Amsterdam", 41526, 16680000, "Westeuropa", 100.0, true});
-        euroMap.put("29", new Object[]{norwegen, "Norwegen", "Oslo", 385200, 5063000, "Nordeuropa", 100.0, false});
-        euroMap.put("30", new Object[]{polen, "Polen", "Warschau", 312685, 3850100, "Mitteleuropa", 100.0, true});
-        euroMap.put("31", new Object[]{portugal, "Portugal", "Lissabon", 92212, 10602000, "Südwesteuropa", 100.0, true});
-        euroMap.put("32", new Object[]{rumänien, "Rumänien", "Bukarest", 238391, 19043000, "Südosteuropa", 100.0, true});
-        //    euroMap.put("33", new Object[]{russland, "Russland", "Moskau", 3955800, 104000000, "Osteuropa", 23.16, false});
-        euroMap.put("34", new Object[]{sanmarino, "San Marino", "San Marino", 61, 32000, "Südeuropa", 100.0, false});
-        euroMap.put("35", new Object[]{schweden, "Schweden", "Stockholm", 450000, 9514000, "Nordeuropa", 100.0, true});
-        euroMap.put("36", new Object[]{schweiz, "Schweiz", "Bern", 41285, 8014000, "Mitteleuropa", 100.0, false});
-        euroMap.put("37", new Object[]{serbien, "Serbien", "Belgrad", 77474, 7120000, "Südosteuropa", 100.0, false});
-        euroMap.put("38", new Object[]{slowakei, "Slowakei", "Bratislava", 49034, 5404000, "Mitteleuropa", 100.0, true});
-        euroMap.put("39", new Object[]{slowenien, "Slowenien", "Ljubljana", 20273, 2058000, "Mitteleuropa", 100.0, true});
-        euroMap.put("40", new Object[]{spanien, "Spanien", "Madrid", 504645, 47213000, "Südwesteuropa", 100.0, true});
-        // euroMap.put("41", new Object[]{tuerkei, "Türkei", "Ankara", 783562, 80810525, "Südosteuropa", 3.0, false});
-        euroMap.put("42", new Object[]{ukraine, "Ukraine", "Kiew", 603700, 45665000, "Osteuropa", 100.0, false});
-        euroMap.put("43", new Object[]{ungarn, "Ungarn", "Budapest", 93030, 9967000, "Mitteleuropa", 100.0, true});
-        euroMap.put("44", new Object[]{vatikan, "Vatikanstadt", "Vatikanstadt", 1, 836, "Südeuropa", 100.0, false});
-        euroMap.put("45", new Object[]{vereinteskönigreich, "Vereinigtes Königreich", "London", 242910, 63200000, "Nordwesteuropa", 100.0, true});
-        euroMap.put("46", new Object[]{belarus, "Weißrussland", "Minsk", 207595, 9489000, "Osteuropa", 100.0, false});
+        gridArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength];
 
         //this.detail = detail;
         List<String> strTempSmallList = new ArrayList<>(); // ähnlich generateFields(), aber Strings nicht int !!!
         List<Object> objTempSmallList = new ArrayList<>();
         List<String[]> strTempBigList = new ArrayList<>();
         List<Object[]> objTempBigList = new ArrayList<>();
-        String[] btnStrArr = new String[gridLength * gridLength];
-        Object[] objArr = new Object[gridLength * gridLength];
-        String[][] bigStringArr = new String[gridLength][gridLength];
-        bigObjectArr = new Object[gridLength][gridLength][8];
-        euroMapCopy = euroMap;
+        String[] btnStrArr = new String[MyViewModel.gridLength * MyViewModel.gridLength];
+        Object[] objArr = new Object[MyViewModel.gridLength * MyViewModel.gridLength];
+        String[][] bigStringArr = new String[MyViewModel.gridLength][MyViewModel.gridLength];
+        bigObjectArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength][5];
 
-        for (int i = 0; i < (gridLength * gridLength); i++) {
-            List<String> keys = new ArrayList<>(euroMap.keySet());                  //Hash keys liste von euromap
-            randomKey = keys.get(random.nextInt(keys.size())& Integer.MAX_VALUE);                      // Zufällig key nehmen
-            String flag = (String) euroMap.get(String.valueOf(randomKey))[0];       // Value nehmen aus euromap
-            objArr[i] = euroMap.get(String.valueOf(randomKey));  //ganzes Array
-            btnStrArr[i] = flag;                                 // eindimensionales array besiedeln
-            euroMap.remove(randomKey);                           // euromap verkleinern (unique Values)
+        africaMapCopy = africaMap;
+
+        for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
+
+            ArrayList<String> keys = new ArrayList<>(AfricaMap.africaMap.keySet());                  //Hash keys liste von euromap
+            randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);
+
+            try {
+                amiFlag = (String) (Objects.requireNonNull(AfricaMap.africaMap.get(randomKey)))[0];    // Value nehmen aus euromap
+            } catch (NullPointerException npe) {
+                npe.printStackTrace();
+            }
+            objArr[i] = AfricaMap.africaMap.get(String.valueOf(randomKey));  //ganzes Array
+            btnStrArr[i] = amiFlag;                                 // eindimensionales array besiedeln
+            AfricaMap.africaMap.remove(randomKey);                           // euromap verkleinern (unique Values)
         }
-        euroMap = euroMapCopy;
-        euroMapCopy.clear();
+        africaMap = africaMapCopy;
+        AfricaMap.africaMap.clear();
 
-        for (int it = 0; it < (gridLength * gridLength); it++) {
+        for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
             strTempSmallList.add(btnStrArr[it]);
             objTempSmallList.add(objArr[it]);
-            //  if(it == 0||it < gridLength) bigObjectArr[0][it]= (objArr[it]);
-            if (it > 0 && mod(it + 1, gridLength) == 0) {
+
+            if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
                 String[] strTempArr = new String[strTempSmallList.size()];
                 Object[] objTempArr = new Object[objTempSmallList.size()];
 
@@ -994,149 +906,163 @@ public class MainFragment extends Fragment {
         for (int i = 0; i < strTempBigList.size(); i++) {
             bigStringArr[i] = strTempBigList.get(i);
         }
-        for (int i = 0; i < strTempBigList.size(); i++) {
-            for (int j = 0; j < objTempBigList.size(); j++) {
-                bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
-                btnArr[i][j].setText((String) bigObjectArr[i][j][0]);
+        try {
+            for (int i = 0; i < strTempBigList.size(); i++) {
+                for (int j = 0; j < objTempBigList.size(); j++) {
+                    bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
+                    String tempStr = (String) bigObjectArr[i][j][0];
+                    MyViewModel.emojiArray[i][j] = (String) bigObjectArr[i][j][0];
+                    btnArr[i][j].setText(MyViewModel.emojiArray[i][j]);
+
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         index = 0;
         arrnummer = 0;
-        btnArr[arrnummer][index].setText(getString(R.string.gameinfo));
-        btnArr[arrnummer][index].setBackgroundColor(Color.GREEN);
-        // activateButtons();
-        animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer][index + 1]);
-        animIndex.invokeColorBackgroundAnimationIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer.invokeColorBackgroundAnimationArrnummer(btnArr[arrnummer + 1][index]);
-        //snackBarShow();
         return btnArr;
     }
 
-    public MyEmojiButton[][] generateAmericaFlags(int color) {    //Flaggenfelder
+    public MyEmojiButton[][] generateAmericaFlags(int color) {
+        //Flaggenfelder
+        if (MyViewModel.gridLength * MyViewModel.gridLength > 25) {
+            MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(random.nextBoolean() ? 1 : 3);
+            btnArr = generateGameSet(getColorTheme(), gameMode.getDetail());
+        } else {
+            AmericaMap americaMapCopy;
+            try {
+                americaMap = AmericaMap.getAmericaMap(americaMap);
+                americaMapCopy = americaMap;
+            } catch (Exception npe) {
+                npe.printStackTrace();
+            }
 
-        americaMap = new HashMap<>();
-        americaMapCopy = new HashMap<>();
+            gridMap = new HashMap<>();
+            gridArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength];
+
+            //this.detail = detail;
+            List<String> strTempSmallList = new ArrayList<>(); // ähnlich generateFields(), aber Strings nicht int !!!
+            List<Object> objTempSmallList = new ArrayList<>();
+            List<String[]> strTempBigList = new ArrayList<>();
+            List<Object[]> objTempBigList = new ArrayList<>();
+            String[] btnStrArr = new String[MyViewModel.gridLength * MyViewModel.gridLength];
+            Object[] objArr = new Object[MyViewModel.gridLength * MyViewModel.gridLength];
+            String[][] bigStringArr = new String[MyViewModel.gridLength][MyViewModel.gridLength];
+            bigObjectArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength][8];
+
+            americaMapCopy = americaMap;
+
+            for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
+
+                ArrayList<String> keys = new ArrayList<>(AmericaMap.aMap.keySet());                  //Hash keys liste von euromap
+                randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);
+
+                try {
+                    amiFlag = (String) (Objects.requireNonNull(AmericaMap.aMap.get(randomKey)))[0];    // Value nehmen aus euromap
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                }
+                objArr[i] = AmericaMap.aMap.get(String.valueOf(randomKey));  //ganzes Array
+                btnStrArr[i] = amiFlag;                                 // eindimensionales array besiedeln
+                AmericaMap.aMap.remove(randomKey);                           // euromap verkleinern (unique Values)
+            }
+            americaMap = americaMapCopy;
+            AmericaMap.aMap.clear();
+
+            for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
+                strTempSmallList.add(btnStrArr[it]);
+                objTempSmallList.add(objArr[it]);
+                //  if(it == 0||it < MyViewModel.gridLength) bigObjectArr[0][it]= (objArr[it]);
+                if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
+                    String[] strTempArr = new String[strTempSmallList.size()];
+                    Object[] objTempArr = new Object[objTempSmallList.size()];
+
+                    for (int i = 0; i < strTempSmallList.size(); i++) {
+                        strTempArr[i] = strTempSmallList.get(i);
+                        objTempArr[i] = objTempSmallList.get(i);
+                    }
+                    strTempBigList.add(strTempArr);
+                    objTempBigList.add(objTempArr);
+                    strTempSmallList.clear();
+                    objTempSmallList.clear();
+                }
+            }
+            for (int i = 0; i < strTempBigList.size(); i++) {
+                bigStringArr[i] = strTempBigList.get(i);
+            }
+            try {
+                for (int i = 0; i < strTempBigList.size(); i++) {
+                    for (int j = 0; j < objTempBigList.size(); j++) {
+                        bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
+                        String tempStr = (String) bigObjectArr[i][j][0];
+                        //btnArr[i][j].setText(tempStr);
+                        MyViewModel.emojiArray[i][j] = (String) bigObjectArr[i][j][0];
+                        btnArr[i][j].setText(MyViewModel.emojiArray[i][j]);
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            index = 0;
+            arrnummer = 0;
+            // startGame();
+        }
+        return btnArr;
+
+    }
+
+    public MyEmojiButton[][] generateAsiaFlags(int color) {
+        //Flaggenfelder
+
+        AsiaMap asiaMapCopy;
+        try {
+            asiaMap = AsiaMap.getAsiaMap(asiaMap);
+            asiaMapCopy = asiaMap;
+        } catch (Exception npe) {
+            npe.printStackTrace();
+        }
+
         gridMap = new HashMap<>();
-        gridArr = new Object[gridLength][gridLength];
-
-        antiguaundbarbuda = (String) getActivity().getResources().getText(R.string.antiguaundbarbuda);
-        argentinien = (String) getActivity().getResources().getText(R.string.argentinien);
-        bahamas = (String) getActivity().getResources().getText(R.string.bahamas);
-        barbados = (String) getActivity().getResources().getText(R.string.barbados);
-        belize = (String) getActivity().getResources().getText(R.string.belize);
-        bolivien = (String) getActivity().getResources().getText(R.string.bolivien);
-        brasilien = (String) getActivity().getResources().getText(R.string.brasilien);
-        chile = (String) getActivity().getResources().getText(R.string.chile);
-        costarica = (String) getActivity().getResources().getText(R.string.costarica);
-        dominica = (String) getActivity().getResources().getText(R.string.dominica);
-        dominikanischerepublik = (String) getActivity().getResources().getText(R.string.dominikanischerepublik);
-        elsalvador = (String) getActivity().getResources().getText(R.string.elsalvador);
-        equador = (String) getActivity().getResources().getText(R.string.equador);
-        grenada = (String) getActivity().getResources().getText(R.string.grenada);
-        guatemala = (String) getActivity().getResources().getText(R.string.guatemala);
-        guyana = (String) getActivity().getResources().getText(R.string.guyana);
-        haiti = (String) getActivity().getResources().getText(R.string.haiti);
-        honduras = (String) getActivity().getResources().getText(R.string.honduras);
-        jamaika = (String) getActivity().getResources().getText(R.string.jamaika);
-        kanada = (String) getActivity().getResources().getText(R.string.kanada);
-        kolumbien = (String) getActivity().getResources().getText(R.string.kolumbien);
-        kuba = (String) getActivity().getResources().getText(R.string.kuba);
-        mexico = (String) getActivity().getResources().getText(R.string.mexico);
-        nicaragua = (String) getActivity().getResources().getText(R.string.nicaragua);
-        panama = (String) getActivity().getResources().getText(R.string.panama);
-        paraguay = (String) getActivity().getResources().getText(R.string.paraguay);
-        peru = (String) getActivity().getResources().getText(R.string.peru);
-        stlittsundnevis = (String) getActivity().getResources().getText(R.string.stlittsundnevis);
-        stluca = (String) getActivity().getResources().getText(R.string.stluca);
-        stvincent = (String) getActivity().getResources().getText(R.string.stvincent);
-        suriname = (String) getActivity().getResources().getText(R.string.suriname);
-        trinidatundtobago = (String) getActivity().getResources().getText(R.string.trinidatundtobago);
-        uruguay = (String) getActivity().getResources().getText(R.string.uruguay);
-        venezuela = (String) getActivity().getResources().getText(R.string.venezuela);
-        vereinigtestaaten = (String) getActivity().getResources().getText(R.string.vereinigtestaaten);
-
-        americaMap.put("0", new Object[]{antiguaundbarbuda, "Antigua und Barbuda", "Saint John's", 443, 102012});
-        americaMap.put("1", new Object[]{argentinien, "Argeninien", "Buenos Aires", 2780400, 44271041});
-        americaMap.put("2", new Object[]{bahamas, "Bahamas", "Nassau", 13939, 395361});
-        americaMap.put("3", new Object[]{barbados, "Barbados", "Bridgetown", 430, 285719});
-        americaMap.put("4", new Object[]{belize, "Belize", "Belmopan", 22966, 374681});
-        americaMap.put("5", new Object[]{bolivien, "Bolivien", "Sucre", 1098581, 11051600});
-        americaMap.put("6", new Object[]{brasilien, "Brasilien", "Brasilia", 8514215, 209288278});
-        americaMap.put("7", new Object[]{chile, "Chile", "Santiago de Chile", 755696, 18054726});
-        americaMap.put("8", new Object[]{costarica, "Costa Rica", "San José", 51100, 4905769});
-        americaMap.put("9", new Object[]{dominica, "Dominica","Roseau",746,73925});
-        americaMap.put("10", new Object[]{dominikanischerepublik, "Dominikanische Republik", "Santo Domingo", 48730, 10766998});
-        americaMap.put("11", new Object[]{elsalvador, "El Salvador", "San Salvador", 21041, 6377853});
-        americaMap.put("12", new Object[]{equador, "Equador", "Quito", 283561, 16624858});
-        americaMap.put("13", new Object[]{grenada, "Grenada", "St. George's", 344, 107825});
-        americaMap.put("14", new Object[]{guatemala, "Guatemala", "Guatemala-Stadt", 109021, 16913503});
-        americaMap.put("15", new Object[]{guyana, "Guyana", "Georgetown", 214970, 777859});
-        // americaMap.put("16", new Object[]{kasachstan, "Kasachstan", "Astana", 2724900, 18157078, "Osteuropa", 5.4, false});
-        americaMap.put("17", new Object[]{haiti, "Haiti", "Port-au-Prince", 27750, 10981229});
-        americaMap.put("18", new Object[]{honduras, "Honduras", "Tegucigalpa", 112090, 9265067});
-        americaMap.put("19", new Object[]{jamaika, "Jamaika", "Kingston", 10991, 2890299});
-        americaMap.put("20", new Object[]{kanada, "Kanada", "Ottawa", 9984670, 36624199});
-        americaMap.put("21", new Object[]{kolumbien, "Kolumbien", "Bogotá", 1138748, 49065615});
-        americaMap.put("22", new Object[]{kuba, "Kuba", "Havanna", 109884, 11484636});
-        americaMap.put("23", new Object[]{mexico, "Mexiko", "Mexiko-Stadt", 1972550, 129163276});
-        americaMap.put("24", new Object[]{nicaragua, "Nicaragua", "Managua", 129494, 6217581});
-        americaMap.put("25", new Object[]{panama, "Panama", "Panama-Stadt", 75517, 4098587});
-        americaMap.put("26", new Object[]{paraguay, "Paraguay", "Asunción", 406752, 6811297});
-        americaMap.put("27", new Object[]{peru, "Peru", "Lima", 1285220, 32165485});
-        americaMap.put("28", new Object[]{stlittsundnevis, "St.Kitts und Nevis", "Basseterre", 269, 55345});
-        americaMap.put("29", new Object[]{stluca, "Saint Lucia", "Castries", 616, 178844});
-        americaMap.put("30", new Object[]{stvincent, "St.Vincent und die Grenadines", "Kingstown", 389, 109897});
-        americaMap.put("31", new Object[]{suriname, "Suriname", "Paramaribo", 163820, 563402});
-        americaMap.put("32", new Object[]{trinidatundtobago, "Trinidat und Tobago", "Port of Spain", 5128, 1369125});
-        //    americaMap.put("33", new Object[]{russland, "Russland", "Moskau", 3955800, 104000000, "Osteuropa", 23.16, false});
-        americaMap.put("34", new Object[]{uruguay, "Uruguay", "Montevideo", 176215, 3456750});
-        americaMap.put("35", new Object[]{venezuela, "Venezuela", "Caracas", 916445, 31977065});
-        americaMap.put("36", new Object[]{vereinigtestaaten, "Vereinigte Staaten", "Washington, D.C.", 9826675, 324459463});
-        // -hier ist sonst ende
-        americaMap.put("37", new Object[]{bahamas, "Bahamas1", "Nassau1", 139391, 3953611});
-        americaMap.put("38", new Object[]{bahamas, "Bahamas2", "Nassau2", 139392, 3953612});
-        americaMap.put("39", new Object[]{bahamas, "Bahamas3", "Nassau3", 139393, 3953613});
-        americaMap.put("40", new Object[]{bahamas, "Bahamas4", "Nassau4", 139394, 3953614});
-        americaMap.put("41", new Object[]{bahamas, "Bahamas5", "Nassau5", 139395, 3953615});
-        americaMap.put("42", new Object[]{bahamas, "Bahamas6", "Nassau6", 139396, 3953616});
-        americaMap.put("43", new Object[]{bahamas, "Bahamas7", "Nassau7", 139397, 3953617});
-        americaMap.put("44", new Object[]{bahamas, "Bahamas8", "Nassau8", 139398, 3953618});
-        americaMap.put("45", new Object[]{bahamas, "Bahamas9", "Nassau9", 139399, 3953619});
-        americaMap.put("46", new Object[]{bahamas, "Bahamas10", "Nassau10", 1393910, 39536110});
-        americaMap.put("47", new Object[]{bahamas, "Bahamas11", "Nassau11", 1393911, 39536111});
-        americaMap.put("48", new Object[]{bahamas, "Bahamas12", "Nassau12", 1393912, 39536112});
-        americaMap.put("49", new Object[]{bahamas, "Bahamas13", "Nassau13", 1393913, 39536113});
+        gridArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength];
 
         //this.detail = detail;
         List<String> strTempSmallList = new ArrayList<>(); // ähnlich generateFields(), aber Strings nicht int !!!
         List<Object> objTempSmallList = new ArrayList<>();
         List<String[]> strTempBigList = new ArrayList<>();
         List<Object[]> objTempBigList = new ArrayList<>();
-        String[] btnStrArr = new String[gridLength * gridLength];
-        Object[] objArr = new Object[gridLength * gridLength];
-        String[][] bigStringArr = new String[gridLength][gridLength];
-        bigObjectArr = new Object[gridLength][gridLength][8];
+        String[] btnStrArr = new String[MyViewModel.gridLength * MyViewModel.gridLength];
+        Object[] objArr = new Object[MyViewModel.gridLength * MyViewModel.gridLength];
+        String[][] bigStringArr = new String[MyViewModel.gridLength][MyViewModel.gridLength];
+        bigObjectArr = new Object[MyViewModel.gridLength][MyViewModel.gridLength][5];
 
-        americaMapCopy = americaMap;
+        asiaMapCopy = asiaMap;
 
-        for (int i = 0; i < (gridLength * gridLength); i++) {
+        for (int i = 0; i < (MyViewModel.gridLength * MyViewModel.gridLength); i++) {
 
-            List<String> keys = new ArrayList<>(americaMap.keySet());                  //Hash keys liste von euromap
-            randomKey = keys.get(random.nextInt(keys.size())& Integer.MAX_VALUE);                      // Zufällig key nehmen
-            String flag = (String) americaMap.get(String.valueOf(randomKey))[0];       // Value nehmen aus euromap
-            objArr[i] = americaMap.get(String.valueOf(randomKey));  //ganzes Array
-            btnStrArr[i] = flag;                                 // eindimensionales array besiedeln
-            americaMap.remove(randomKey);                           // euromap verkleinern (unique Values)
+            ArrayList<String> keys = new ArrayList<>(AsiaMap.asiaMap.keySet());                  //Hash keys liste von euromap
+            randomKey = keys.get(random.nextInt(keys.size()) & Integer.MAX_VALUE);
+
+            try {
+                amiFlag = (String) (Objects.requireNonNull(AsiaMap.asiaMap.get(randomKey)))[0];    // Value nehmen aus euromap
+            } catch (NullPointerException npe) {
+                npe.printStackTrace();
+            }
+            objArr[i] = AsiaMap.asiaMap.get(String.valueOf(randomKey));  //ganzes Array
+            btnStrArr[i] = amiFlag;                                 // eindimensionales array besiedeln
+            AsiaMap.asiaMap.remove(randomKey);                           // euromap verkleinern (unique Values)
         }
-        americaMap = americaMapCopy;
-        americaMapCopy.clear();
+        asiaMap = asiaMapCopy;
+        AsiaMap.asiaMap.clear();
 
-        for (int it = 0; it < (gridLength * gridLength); it++) {
+        for (int it = 0; it < (MyViewModel.gridLength * MyViewModel.gridLength); it++) {
             strTempSmallList.add(btnStrArr[it]);
             objTempSmallList.add(objArr[it]);
-            //  if(it == 0||it < gridLength) bigObjectArr[0][it]= (objArr[it]);
-            if (it > 0 && mod(it + 1, gridLength) == 0) {
+            //  if(it == 0||it < MyViewModel.gridLength) bigObjectArr[0][it]= (objArr[it]);
+            if (it > 0 && mod(it + 1, MyViewModel.gridLength) == 0) {
                 String[] strTempArr = new String[strTempSmallList.size()];
                 Object[] objTempArr = new Object[objTempSmallList.size()];
 
@@ -1153,60 +1079,63 @@ public class MainFragment extends Fragment {
         for (int i = 0; i < strTempBigList.size(); i++) {
             bigStringArr[i] = strTempBigList.get(i);
         }
+        try {
+            for (int i = 0; i < strTempBigList.size(); i++) {
+                for (int j = 0; j < objTempBigList.size(); j++) {
+                    bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
+                    String tempStr = (String) bigObjectArr[i][j][0];
+                    //btnArr[i][j].setText(tempStr);
+                    MyViewModel.emojiArray[i][j] = (String) bigObjectArr[i][j][0];
+                    btnArr[i][j].setText(MyViewModel.emojiArray[i][j]);
 
-        for (int i = 0; i < strTempBigList.size(); i++) {
-            for (int j = 0; j < objTempBigList.size(); j++) {
-                bigObjectArr[i][j] = (Object[]) objTempBigList.get(j)[i];
-                btnArr[i][j].setText((String) bigObjectArr[i][j][0]);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         index = 0;
         arrnummer = 0;
-        btnArr[arrnummer][index].setText(getString(R.string.gameinfo));
-        btnArr[arrnummer][index].setBackgroundColor(Color.GREEN);
-        // activateButtons();
-        animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer][index + 1]);
-        animIndex.invokeColorBackgroundAnimationIndex(btnArr[arrnummer][index + 1]);
-        animArrnummer.invokeColorBackgroundAnimationArrnummer(btnArr[arrnummer + 1][index]);
-        //snackBarShow();
+
         return btnArr;
     }
 
     public void func_a1(View v) {
         knopfNummer = 100;
 
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
-                snackbar.make(layout, getString(R.string.zahlenspiel),
-                         5000).show();
+                Snackbar.make(layout, getString(R.string.zahlenspiel),
+                        LENGTH_INDEFINITE).show();
                 break;
             case 2:
             case 7:
-                snackbar.make(layout, getString(R.string.landesflaeche),
-                        5000).show();
+                Snackbar.make(layout, getString(R.string.landesflaeche),
+                        LENGTH_INDEFINITE).show();
                 break;
             case 3:
-                snackbar.make(layout, getString(R.string.bruchspiel),
-                        5000).show();
+                Snackbar.make(layout, getString(R.string.bruchspiel),
+                        LENGTH_INDEFINITE).show();
                 break;
             case 4:
             case 8:
-                snackbar.make(layout, getString(R.string.einwohnerzahl),
-                        5000).show();
+                Snackbar.make(layout, getString(R.string.einwohnerzahl),
+                        LENGTH_INDEFINITE).show();
                 break;
             case 5:
             case 6:
             case 9:
             case 10:
-                setDetail();
-                checkStr = getSnackbarInfo();
-                playNumbers();
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+
+                snackBarShow();
                 break;
         }
-        //playNumbers();
-        //Toast.makeText(getActivity(), "Arrnummer: " + arrnummer + " Index: " + index + " bigArrLength: " + bigArr.length, Toast.LENGTH_SHORT).show();
+        playNumbers();
+
     }
 
 
@@ -1214,13 +1143,11 @@ public class MainFragment extends Fragment {
         knopfNummer = 101;
         //messageBox = new MyMsgBox(getActivity(), 800, Gravity.BOTTOM);
         playNumbers();
-        //Toast.makeText(getActivity(), "Arrnummer: " + arrnummer + " Index: " + index + " bigArrLength: " + bigArr.length, Toast.LENGTH_SHORT).show();
     }
 
     public void func_a3(View v) {
         knopfNummer = 102;
         playNumbers();
-        //Toast.makeText(getActivity(), "Arrnummer: " + arrnummer + " Index: " + index + " bigArrLength: " + bigArr.length, Toast.LENGTH_SHORT).show();
     }
 
     public void func_a4(View v) {
@@ -1245,15 +1172,13 @@ public class MainFragment extends Fragment {
 
     public void func_b1(View v) {
         knopfNummer = 110;
-        //messageBox = new MyMsgBox(getActivity(), 800, Gravity.BOTTOM);
         playNumbers();
-        //Toast.makeText(getActivity(), "Arrnummer: " + arrnummer + " Index: " + index + " bigArrLength: " + bigArr.length, Toast.LENGTH_SHORT).show();
+
     }
 
     public void func_b2(View v) {
         knopfNummer = 111;
         playNumbers();
-        //Toast.makeText(getActivity(), "Arrnummer: " + arrnummer + " Index: " + index + " bigArrLength: " + bigArr.length, Toast.LENGTH_SHORT).show();
     }
 
     public void func_b3(View v) {
@@ -1458,29 +1383,29 @@ public class MainFragment extends Fragment {
 
     public void func_long_a1(View v) {
         knopfNummer_lc = 100;
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
-                snackbar.make(layout, "Tippe auf die größere Ziffer/Zahl",
+                Snackbar.make(layout, "Tippe auf die größere Ziffer/Zahl",
                         2000).show();
                 break;
             case 2:
-                snackbar.make(layout, getResources().getString(R.string.landesflaeche),
+                Snackbar.make(layout, getResources().getString(R.string.landesflaeche),
                         2000).show();
                 break;
             case 3:
-                snackbar.make(layout, "Tippe auf den größeren Bruck",
+                Snackbar.make(layout, "Tippe auf den größeren Bruck",
                         2000).show();
                 break;
             case 4:
-                snackbar.make(layout, getResources().getString(R.string.einwohnerzahl),
+                Snackbar.make(layout, getResources().getString(R.string.einwohnerzahl),
                         2000).show();
                 break;
             case 5:
-                snackbar.make(layout, getResources().getString(R.string.landesname),
+                Snackbar.make(layout, getResources().getString(R.string.landesname),
                         2000).show();
                 break;
             case 6:
-                snackbar.make(layout, getResources().getString(R.string.landeshauptstadt),
+                Snackbar.make(layout, getResources().getString(R.string.landeshauptstadt),
                         2000).show();
                 break;
         }
@@ -1742,15 +1667,15 @@ public class MainFragment extends Fragment {
     void indexStep() {   //todo reactivate indexScroll method
         animIndex.stop();
         animArrnummer.stop();
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-                if (btnArr[arrnummer + 1][index].getCurrentTextColor() != (Color.RED)) {
-                    btnArr[arrnummer + 1][index].setTextColor(Color.WHITE);
+                if (btnArr[arrnummer + 1][index].getCurrentTextColor() != (RED)) {
+                    btnArr[arrnummer + 1][index].setTextColor(BLACK);
                 }
-                btnArr[arrnummer+1][index].setBackgroundColor(Color.TRANSPARENT);
-                btnArr[arrnummer][index].setBackgroundColor(Color.TRANSPARENT);             //todo mache die alten Felder transparent, sieht eleganter aus...
-                btnArr[arrnummer][index + 1].setTextColor(Color.GREEN);
+                btnArr[arrnummer + 1][index].setBackgroundColor(WHITE);
+                btnArr[arrnummer][index].setBackgroundColor(WHITE);             //todo mache die alten Felder WHITE, sieht eleganter aus...
+                btnArr[arrnummer][index + 1].setTextColor(GREEN);
 
                 btnArr[arrnummer][index + 1].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
                 btnArr[arrnummer + 1][index].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
@@ -1766,10 +1691,14 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 if (btnArr[arrnummer + 1][index].getBackground() != redDrawable) {
-                    btnArr[arrnummer + 1][index].setBackgroundColor(Color.TRANSPARENT);
+                    btnArr[arrnummer + 1][index].setBackgroundColor(WHITE);
                 }
-                btnArr[arrnummer][index + 1].setBackgroundColor(Color.GREEN);
+                btnArr[arrnummer][index + 1].setBackgroundColor(GREEN);
                 indexScroll();
                 index++;
                 activateButtons();
@@ -1780,13 +1709,13 @@ public class MainFragment extends Fragment {
     void arrnummerStep() {
         animIndex.stop();
         animArrnummer.stop();
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-                if (btnArr[arrnummer][index + 1].getCurrentTextColor() != (Color.RED)) {
-                    btnArr[arrnummer][index + 1].setTextColor(Color.WHITE);
+                if (btnArr[arrnummer][index + 1].getCurrentTextColor() != (RED)) {
+                    btnArr[arrnummer][index + 1].setTextColor(BLACK);
                 }
-                btnArr[arrnummer + 1][index].setTextColor(Color.GREEN);
+                btnArr[arrnummer + 1][index].setTextColor(GREEN);
 
                 btnArr[arrnummer][index + 1].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
                 btnArr[arrnummer + 1][index].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
@@ -1801,10 +1730,14 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 if (btnArr[arrnummer][index + 1].getBackground() != redDrawable) {
-                    btnArr[arrnummer][index + 1].setBackgroundColor(Color.TRANSPARENT);
+                    btnArr[arrnummer][index + 1].setBackgroundColor(WHITE);
                 }
-                btnArr[arrnummer + 1][index].setBackgroundColor(Color.GREEN);
+                btnArr[arrnummer + 1][index].setBackgroundColor(GREEN);
                 arrnummer++;
                 activateButtons();
                 break;
@@ -1814,20 +1747,22 @@ public class MainFragment extends Fragment {
     void indexEndsIt() {
         animIndex.stop();
         animArrnummer.stop();
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-                btnArr[arrnummer][index].setTextColor(Color.GREEN);
+                btnArr[arrnummer][index].setTextColor(GREEN);
 
-               btnArr[arrnummer][index].setBackgroundColor(Color.TRANSPARENT);
-                for (int i = arrnummer; i < gridLength - 1; i++) {
-                    btnArr[i][index].setTextColor(Color.GREEN);
+                btnArr[arrnummer][index].setBackgroundColor(WHITE);
+                for (int i = arrnummer; i < MyViewModel.gridLength; i++) {
+                    btnArr[i][index].setTextColor(GREEN);
+                    btnArr[i][index].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
                 }
-                gridLength++;
+                MyViewModel.gridLength++;
+                MyViewModel.emojiArray = new String[MyViewModel.gridLength][MyViewModel.gridLength];
                 index = 0;
                 arrnummer = 0;
                 knopfNummerAlt = 100;
-                gameMode = randomWithRange(1,13);
+                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
                 mainfragment = MainFragment.newInstance();
                 break;
             case 2:
@@ -1838,22 +1773,27 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
-                btnArr[arrnummer][index].setBackgroundColor(Color.GREEN);       // todo Abstürze verhindern wenn americaMap gridlength >= 6
-                for (int i = arrnummer; i < gridLength - 1; i++) {                  //todo brueche bei gridlength 3 passen nicht immer in buttons
-                    btnArr[i][index].setBackgroundColor(Color.GREEN);
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                btnArr[arrnummer][index].setBackgroundColor(GREEN);       // todo Abstürze verhindern wenn americaMap MyViewModel.gridLength >= 6
+                for (int i = arrnummer; i < MyViewModel.gridLength; i++) {                  //todo brueche bei MyViewModel.gridLength 3 passen nicht immer in buttons
+                    btnArr[i][index].setBackgroundColor(GREEN);
 
                 }
-                gridLength++;
+                MyViewModel.gridLength++;
+                MyViewModel.emojiArray = new String[gridLength][gridLength];
                 index = 0;
                 arrnummer = 0;
                 knopfNummerAlt = 100;
-                gameMode = randomWithRange(1,13);
+                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
                 mainfragment = MainFragment.newInstance();
                 break;
         }
-        if (gridLength == 7) {
-            MainActivity.gridLength = 4;
-            gameMode = randomWithRange(1,13);
+        if (MyViewModel.gridLength == 7) {
+            MyViewModel.gridLength = 4;
+            MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
         }
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -1865,22 +1805,24 @@ public class MainFragment extends Fragment {
     void arrnummerEndsIt() {
         animIndex.stop();
         animArrnummer.stop();
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-                btnArr[arrnummer][index].setTextColor(Color.GREEN);
+                btnArr[arrnummer][index].setTextColor(GREEN);
 
-                btnArr[arrnummer][index].setBackgroundColor(Color.TRANSPARENT);
-                for (int i = arrnummer; i < gridLength-1; i++) { //TODO: testing
-                    btnArr[arrnummer][i].setTextColor(Color.GREEN);
+                btnArr[arrnummer][index].setBackgroundColor(WHITE);
+                for (int i = arrnummer; i < MyViewModel.gridLength; i++) { //TODO: testing
+                    btnArr[arrnummer][i].setTextColor(GREEN);
+                    btnArr[arrnummer][i].setBackgroundColor(getResources().getColor(R.color.Blau_Hintergrund));
                     indexScroll();
                 }
 
-                gridLength++;
+                MyViewModel.gridLength++;
+                MyViewModel.emojiArray = new String[MyViewModel.gridLength][MyViewModel.gridLength];
                 index = 0;
                 arrnummer = 0;
                 knopfNummerAlt = 100;
-                gameMode = randomWithRange(1,13);
+                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
                 break;
             case 2:
             case 4:
@@ -1890,21 +1832,26 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
-                btnArr[arrnummer][index].setBackgroundColor(Color.GREEN);
-                for (int i = arrnummer; i < gridLength - 1; i++) {
-                    btnArr[arrnummer][i].setBackgroundColor(Color.GREEN);
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                btnArr[arrnummer][index].setBackgroundColor(GREEN);
+                for (int i = arrnummer; i < MyViewModel.gridLength; i++) {
+                    btnArr[arrnummer][i].setBackgroundColor(GREEN);
                     indexScroll();
                 }
-                gridLength++;
+                MyViewModel.gridLength++;
+                MyViewModel.emojiArray = new String[MyViewModel.gridLength][MyViewModel.gridLength];
                 index = 0;
                 arrnummer = 0;
                 knopfNummerAlt = 100;
-                gameMode = randomWithRange(1,13);
+                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
                 break;
         }
-        if (gridLength == 7) {
-            MainActivity.gridLength = 4;
-            gameMode = randomWithRange(1,10);
+        if (MyViewModel.gridLength == 7) {
+            MyViewModel.gridLength = 4;
+            MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(randomWithRange(1, 14));
         }
 
         mainfragment = MainFragment.newInstance();
@@ -1912,42 +1859,41 @@ public class MainFragment extends Fragment {
         transaction.replace(R.id.container, mainfragment);
         transaction.addToBackStack(null);
         transaction.commit();
-
-
     }
 
+
     void playNumbers() {// an detail denken !!
-        //testIndexScroll(10000);
 
-
-        switch (gameMode) {    //Zahlenspiele 0-10 ... 0-1000000
+        switch (MyViewModel.gameMode.getStatus()) {    //Zahlenspiele 0-10 ... 0-1000000
             case 1: {
 
                 try {
-                    if (index == gridLength - 1) {
+                    if (index == MyViewModel.gridLength - 1) {
                         indexEndsIt();
 
-                    } else if (arrnummer == gridLength - 1) {
+                    } else if (arrnummer == MyViewModel.gridLength - 1) {
                         arrnummerEndsIt();
                     } else if (bigArr[arrnummer][index + 1] > bigArr[arrnummer + 1][index]) {
                         if (knopfNummer - knopfNummerAlt == 1) {
                             indexStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                         } else {
                             animArrnummer.stop();
-                            btnArr[arrnummer + 1][index].setTextColor(Color.RED);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            btnArr[arrnummer + 1][index].setTextColor(RED);   //TODO editieren ... bei Fehler weiterspringen
+                            getReaction((byte) 0);
+                           // reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            indexStep(); //TODO Zeile wurde hinzugefügt
                         }
                     } else if (bigArr[arrnummer + 1][index] > bigArr[arrnummer][index + 1]) {
                         if (knopfNummer - knopfNummerAlt == 10) {
                             arrnummerStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                         } else {
                             animIndex.stop();
-                            btnArr[arrnummer][index + 1].setTextColor(Color.RED);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            btnArr[arrnummer][index + 1].setTextColor(RED);
+                            getReaction((byte) 0);
+                          //  reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            arrnummerStep(); //TODO Zeile wurde hinzugefügt
                             // Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -1960,34 +1906,36 @@ public class MainFragment extends Fragment {
             case 3: {     //Bruechespiel
 
                 try {
-                    //  Toast.makeText(getActivity(), bigObjectArr[arrnummer][index+1][1]+" "+bigObjectArr[arrnummer][index+1][detail]+" | "+bigObjectArr[arrnummer+1][index][1]+" "+bigObjectArr[arrnummer+1][index][detail], Toast.LENGTH_LONG).show();
-                    if (index == gridLength - 1) {
+
+                    if (index == MyViewModel.gridLength - 1) {
                         indexEndsIt();
 
-                    } else if (arrnummer == gridLength - 1) {
+                    } else if (arrnummer == MyViewModel.gridLength - 1) {
                         arrnummerEndsIt();
                     } else if ((double) (bigObjectArr[arrnummer][index + 1][1]) > (double) (bigObjectArr[arrnummer + 1][index][1])) {
                         if (knopfNummer - knopfNummerAlt == 1) {
                             indexStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                             knopfNummerAlt_lc++;
 
                         } else {
                             animArrnummer.stop();
-                            btnArr[arrnummer + 1][index].setTextColor(Color.RED);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            btnArr[arrnummer + 1][index].setTextColor(RED);
+                            getReaction((byte) 0);
+                           // reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            indexStep(); //TODO Zeile wurde hinzugefügt
                         }
                     } else if ((double) bigObjectArr[arrnummer + 1][index][1] > (double) bigObjectArr[arrnummer][index + 1][1]) {
                         if (knopfNummer - knopfNummerAlt == 10) {
                             arrnummerStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                             knopfNummerAlt_lc += 10;
                         } else {
                             animIndex.stop();
-                            btnArr[arrnummer][index + 1].setTextColor(Color.RED);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            btnArr[arrnummer][index + 1].setTextColor(RED);
+                            getReaction((byte) 0);
+                           // reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            arrnummerStep(); //TODO Zeile wurde hinzugefügt
                             // Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -2001,37 +1949,40 @@ public class MainFragment extends Fragment {
             case 2:
             case 4:
             case 7:
-            case 8:    setDetail();
+            case 8:
+
                 //Snackbar.make(layout, getResources().getString(R.string.einwohnerzahl), Snackbar.LENGTH_LONG).show();
                 try {
                     //  Toast.makeText(getActivity(), bigObjectArr[arrnummer][index+1][1]+" "+bigObjectArr[arrnummer][index+1][detail]+" | "+bigObjectArr[arrnummer+1][index][1]+" "+bigObjectArr[arrnummer+1][index][detail], Toast.LENGTH_LONG).show();
-                    if (index == gridLength - 1) {
+                    if (index == MyViewModel.gridLength - 1) {
                         indexEndsIt();
 
-                    } else if (arrnummer == gridLength - 1) {
+                    } else if (arrnummer == MyViewModel.gridLength - 1) {
                         arrnummerEndsIt();
-                    } else if ((int) (bigObjectArr[arrnummer][index + 1][detail]) > (int) (bigObjectArr[arrnummer + 1][index][detail])) {
+                    } else if ((int) (bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]) > (int) (bigObjectArr[arrnummer + 1][index][gameMode.getDetail()])) {
                         if (knopfNummer - knopfNummerAlt == 1) {
                             indexStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                             knopfNummerAlt_lc++;
 
                         } else {
                             animArrnummer.stop();
                             btnArr[arrnummer + 1][index].setBackground(redDrawable);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            getReaction((byte) 0);
+                            //reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            indexStep(); //TODO Zeile wurde hinzugefügt
                         }
-                    } else if ((int) bigObjectArr[arrnummer + 1][index][detail] > (int) bigObjectArr[arrnummer][index + 1][detail]) {
+                    } else if ((int) bigObjectArr[arrnummer + 1][index][gameMode.getDetail()] > (int) bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]) {
                         if (knopfNummer - knopfNummerAlt == 10) {
                             arrnummerStep();
-                            getReaction((byte)1);
+                            getReaction((byte) 1);
                             knopfNummerAlt_lc += 10;
                         } else {
                             animIndex.stop();
                             btnArr[arrnummer][index + 1].setBackground(redDrawable);
-                            getReaction((byte)0);
-                            reverseKnopfnummer();
+                            getReaction((byte) 0);
+                            // reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                            arrnummerStep(); //TODO Zeile wurde hinzugefügt
                             // Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -2045,42 +1996,47 @@ public class MainFragment extends Fragment {
             case 6:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 try {
                     //  Toast.makeText(getActivity(), bigObjectArr[arrnummer][index+1][1]+" "+bigObjectArr[arrnummer][index+1][detail]+" | "+bigObjectArr[arrnummer+1][index][1]+" "+bigObjectArr[arrnummer+1][index][detail], Toast.LENGTH_LONG).show();
                     if (knopfNummer != 100) {
-                      if (index == gridLength - 1) {
+                        if (index == MyViewModel.gridLength - 1) {
                             indexEndsIt();
 
-                        } else if (arrnummer == gridLength - 1) {
+                        } else if (arrnummer == MyViewModel.gridLength - 1) {
                             arrnummerEndsIt();
-                        } else if (checkStr == bigObjectArr[arrnummer][index + 1][detail]) {
+                        } else if (checkStr == bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]) {
                             if (knopfNummer - knopfNummerAlt == 1) {
                                 indexStep();
-                                getReaction((byte)1);
+                                getReaction((byte) 1);
                                 knopfNummerAlt = knopfNummer;  ///gestestet hier
                                 knopfNummerAlt_lc++;
-                                setDetail();
                                 checkStr = getSnackbarInfo();
                             } else {
                                 animArrnummer.stop();
                                 btnArr[arrnummer + 1][index].setBackground(redDrawable);
-                                getReaction((byte)0);
-                                reverseKnopfnummer();
+                                getReaction((byte) 0);
+                                //reverseKnopfnummer(); //TODO Zeile wurde als 2. auskommentiert
+                                indexStep(); //TODO Zeile wurde hinzugefügt
+                                checkStr = getSnackbarInfo();
                             }
-                        } else if (checkStr == bigObjectArr[arrnummer + 1][index][detail]) {
+                        } else if (checkStr == bigObjectArr[arrnummer + 1][index][gameMode.getDetail()]) {
                             if (knopfNummer - knopfNummerAlt == 10) {
                                 arrnummerStep();
-                                getReaction((byte)1);
+                                getReaction((byte) 1);
                                 knopfNummerAlt = knopfNummer;    ///gestestet hier
                                 knopfNummerAlt_lc += 10;
-                                setDetail();
                                 checkStr = getSnackbarInfo();
                             } else {
                                 animIndex.stop();
                                 btnArr[arrnummer][index + 1].setBackground(redDrawable);
-                                getReaction((byte)0);
-                                reverseKnopfnummer();
-                                // Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                                getReaction((byte) 0);
+                                //reverseKnopfnummer();  //TODO Zeile wurde als 2. auskommentiert
+                                arrnummerStep(); //TODO Zeile wurde hinzugefügt
+                                checkStr = getSnackbarInfo();
                             }
                         }
                     }
@@ -2098,8 +2054,9 @@ public class MainFragment extends Fragment {
 
         // --letzte änderung
 
-        if (index < gridLength - 1) {
+        if (index < MyViewModel.gridLength - 1) {
 
+            animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
             animIndex.invokeColor(btnArr[arrnummer][index + 1]);
 
             invokeBackground(btnArr[arrnummer][index + 1]);
@@ -2107,8 +2064,8 @@ public class MainFragment extends Fragment {
         } else {
             indexEndsIt();
         }
-        if (arrnummer < gridLength - 1) {
-
+        if (arrnummer < MyViewModel.gridLength - 1) {
+            animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer + 1][index]);
             animArrnummer.invokeColor(btnArr[arrnummer + 1][index]);
 
             invokeBackground(btnArr[arrnummer + 1][index]);
@@ -2119,14 +2076,15 @@ public class MainFragment extends Fragment {
     }
 
     public void resetColors() {
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-                for (int i = 0; i < gridLength; i++) {
-                    for (int e = 0; e < gridLength; e++) {
-                        btnArr[i][e].setTextColor(Color.WHITE);
+                for (int i = 0; i < MyViewModel.gridLength; i++) {
+                    for (int e = 0; e < MyViewModel.gridLength; e++) {
+                        btnArr[i][e].setTextColor(BLACK);
                     }
                 }
+
                 break;
             case 2:
             case 4:
@@ -2136,20 +2094,26 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
 
-             /*   for (int i = 0; i < gridLength; i++) {
+                for (int i = 0; i < gridLength; i++) {
                     for (int e = 0; e < gridLength; e++) {
                         btnArr[i][e].setBackgroundColor(getResources().getColor(R.color.Grau_Hintergrund));
                     }
                 }
-                break;*/
-            //btnArr[0][0].setTextColor(Color.GREEN);
+                break;
+
         }
+        btnArr[0][0].setText(R.string.gameinfo);
+        btnArr[0][0].setTextColor(GREEN);
     }
 
     public void snackBarShow() {
 
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
                 snackbar.make(layout, getString(R.string.zahlenspiel),
                         LENGTH_INDEFINITE).show();
@@ -2172,10 +2136,11 @@ public class MainFragment extends Fragment {
             case 6:
             case 9:
             case 10:
-
-
-               // checkStr = getSnackbarInfo();
-
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                checkStr = getSnackbarInfo();
                 break;
         }
         //playNumbers();
@@ -2184,13 +2149,13 @@ public class MainFragment extends Fragment {
 
     public static int randomWithRange(int min, int max) {
         int range = (max - min) + 1;
-        return (int) (Math.random() * range) + min;
+        return (int) (random() * range) + min;
     }
 
     String punkteOut(int punkte) {
-        if (punkte == 0) return Integer.toString(punkte) + " Punkte";
-        else if (punkte < 2) return Integer.toString(punkte) + " Punkt";
-        else return Integer.toString(punkte) + " Punkte";
+        if (punkte == 0) return punkte + " Punkte";
+        else if (punkte < 2) return punkte + " Punkt";
+        else return punkte + " Punkte";
     }
 
     List<Integer> makeSequence(int begin, int end) {
@@ -2210,12 +2175,9 @@ public class MainFragment extends Fragment {
     }
 
     void invokeBackground(Button btn) {
-        switch (gameMode) {
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 3:
-              //  if (btn.getCurrentTextColor() != (Color.RED)) {
-              //      btn.setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
-              //  }
             case 2:
             case 4:
             case 5:
@@ -2224,20 +2186,22 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
-         //       if (btn.getBackground() != redDrawable) {
-         //           btn.setBackgroundColor(getResources().getColor(R.color.Grau_Hintergrund));
-         //       }
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                if (btn.getCurrentTextColor() != (Color.RED)) {
+                    btn.setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
+                }
         }
     }
 
     public void showRangeDialog() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         // Set the alert dialog title
         builder.setTitle("Zahlenmenge");
 
-        // Initializing an array
         final String[] zahlenauswahl = new String[]{
                 "Frieda",                        // gameMode =1
                 "0 - 100",
@@ -2245,14 +2209,18 @@ public class MainFragment extends Fragment {
                 "0 - 10000",
                 "0 - 1000000",
                 "Brueche",                       // gameMode =
-                "Europa-Länder-Fläche",         // erste
-                "Europa-Länder-Einwohner",
-                "Europa-Länder-Flaggen",
-                "Europa-Länder-Hauptstädte",
-                "Amerika-Länder-Fläche",         // erste
-                "Amerika-Länder-Einwohner",
-                "Amerika-Länder-Flaggen",
-                "Amerika-Länder-Hauptstädte"
+                "Europas-Länder-Fläche",         // erste
+                "Europas-Länder-Einwohner",
+                "Europas-Länder-Namen",
+                "Europas-Länder-Hauptstädte",
+                "Amerikas-Länder-Fläche",         // erste
+                "Amerikas-Länder-Einwohner",
+                "Amerikas-Länder-Namen",
+                "Amerikas-Länder-Hauptstädte",
+                "Asiens-Länder-Namen",
+                "Asiens-Länder-Hauptstädte",
+                "Afrikas-Länder-Namen",
+                "Afrikas-Länder-Hauptstädte"
         };
 
         builder.setSingleChoiceItems(
@@ -2266,140 +2234,126 @@ public class MainFragment extends Fragment {
                         selectedItem = Arrays.asList(zahlenauswahl).get(i);
                         switch (i) {
                             case 0:
-                                gameMode = 1;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(1);
                                 numberMin = 1;
                                 numberMax = 10;
                                 break;
                             case 1:
-                                gameMode = 1;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(1);
                                 numberMin = 1;
                                 numberMax = 100;
                                 break;
                             case 2:
-                                gameMode = 1;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(1);
                                 numberMin = 1;
                                 numberMax = 1000;
                                 break;
                             case 3:
-                                gameMode = 1;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(1);
                                 numberMin = 1;
                                 numberMax = 10000;
                                 break;
                             case 4:
-                                gameMode = 1;          // Todo generierte addition,subtraktion, multiplikation an dieser Stelle
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(1);        // Todo generierte addition,subtraktion, multiplikation an dieser Stelle
                                 numberMin = 1;
                                 numberMax = 99999;
                                 break;
                             case 5:
-                                gameMode = 3;         // Brüche
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(3);       // Brüche
                                 numberMin = 1;
                                 numberMax = 100;
                                 break;
                             case 6:
-                                gameMode = 2;          // Euroländer Flächen
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(2);        // Euroländer Flächen
                                 break;
                             case 7:
-                                gameMode = 4;          // Euroländer Einwohner
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(4);          // Euroländer Einwohner
                                 break;
                             case 8:
-                                gameMode = 5;          // Euroländer Flagge zu Land
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(5);      // Euroländer Flagge zu Land
                                 break;
                             case 9:
-                                gameMode = 6;          // EuroLänder Hauptstädte
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(6);        // EuroLänder Hauptstädte
                                 break;
                             case 10:
-                                gameMode = 7;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(7);     //Flächen
                                 break;
                             case 11:
-                                gameMode = 8;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(8);           //Einwohner
                                 break;
                             case 12:
-                                gameMode = 9;
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(9);        //Flagge zu Land
                                 break;
                             case 13:
-                                gameMode = 10;
-
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(10);      //Hauptstädte
+                                break;
+                            case 14:
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(11);  // Asienländer Flagge zu Land
+                                break;
+                            case 15:
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(12);// Asienländer Hauptstädte
+                            case 16:
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(13);  // Asienländer Flagge zu Land
+                                break;
+                            case 17:
+                                MyViewModel.titleBarString = MyViewModel.gameMode.setStatus(14);// Asienländer Hauptstädte
 
                         }
-                        try {
-                            // resetColors();
-                            animIndex.stop();
-                            animArrnummer.stop();
-                            resetColors();
-                            resetValues();
-                            setDetail();
-                            dialogInterface.dismiss();
-                            btnArr = generateGameSet(color, detail);
 
+                        dialogInterface.dismiss();
+                        animIndex.stop();
+                        animArrnummer.stop();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // Display the selected item's text on snack bar
+                        btnArr = generateGameSet(color, gameMode.getDetail());
+                        resetColors();
+                        resetValues();
+                        horizontalScrollView.scrollTo(0, 0);
+                        startGame();
 
                     }
                 });
 
-        // Set the a;ert dialog positive button
-                   /*   okButton = builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-
-
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                 Create the alert dialog*/
-
         AlertDialog dialog = builder.create();
-
-        // Finally, display the alert dialog
         dialog.show();
     }
 
-    public void getReaction(byte result){
+    public void getReaction(byte result) {
 
-        if(trueMap == null || trueMap.size() == 1) generateTrueReactionMaps();
-        if(falseMap == null || falseMap.size()==1) generateFalseReactionMaps();
+        if (trueMap == null || trueMap.size() == 1) {
+            generateTrueReactionMaps();
+
+        }
+        if (falseMap == null || falseMap.size() == 1) {
+            generateFalseReactionMaps();
+
+        }
         switch (result) {
             case 0:
+                soundLogic(false);
                 List<String> falseKeys = new ArrayList<>(falseMap.keySet());                  //Hash keys liste von euromap
-                randomKey = falseKeys.get(random.nextInt(falseKeys.size())& Integer.MAX_VALUE);                      // Zufällig key nehmen
+                randomKey = falseKeys.get(random.nextInt(falseKeys.size()) & Integer.MAX_VALUE);                      // Zufällig key nehmen
                 retStr = falseMap.get(String.valueOf(randomKey));       // Value nehmen aus euromap
                 falseMap.remove(randomKey);
                 break;
             case 1:
+                soundLogic(true);
                 List<String> trueKeys = new ArrayList<>(trueMap.keySet());                  //Hash keys liste von euromap
-                randomKey = trueKeys.get(random.nextInt(trueKeys.size())& Integer.MAX_VALUE);                      // Zufällig key nehmen
+                randomKey = trueKeys.get(random.nextInt(trueKeys.size()) & Integer.MAX_VALUE);                      // Zufällig key nehmen
                 retStr = trueMap.get(String.valueOf(randomKey));       // Value nehmen aus euromap
                 trueMap.remove(randomKey);
                 break;
         }
 
-       // reactionButton.setText(retStr);
-       // find init on func_a1 and func_b0 : m = new MyMsgBox(getActivity(), 800, Gravity.BOTTOM);
-       // new MyMsgBox(getActivity(), 500,Gravity.BOTTOM).show(retStr);
 
         if (messageBox == null) {
-            messageBox = new MyMsgBox(getActivity(),400,Gravity.BOTTOM);
-        messageBox.show(retStr);
-        } else {messageBox.show(retStr+"");}
-        //else new MyMsgBox(getActivity(), 800, Gravity.BOTTOM).show(retStr);
-
-    //  new MyMsgBox(getActivity(), 800, Gravity.BOTTOM);
-
-        /*if (messageBox2 != null) messageBox2.show(retStr);
-        if (messageBox3 != null) messageBox3.show(retStr);
-        if (messageBox4 != null) messageBox4.show(retStr);
-        if (messageBox5 != null) messageBox5.show(retStr);*/
-        //else if (messageBox == null) messageBox = new MyMsgBox(getActivity(), 500,Gravity.BOTTOM);
-        //messageBox.show(retStr);
+            messageBox = new MyMsgBox(getActivity(), 400, Gravity.BOTTOM);
+            messageBox.show(retStr);
+        } else {
+            messageBox.show(retStr + "");
+        }
     }
 
-    public void generateTrueReactionMaps(){
+    public void generateTrueReactionMaps() {
 
         trueMap = new HashMap<>();
 
@@ -2427,31 +2381,32 @@ public class MainFragment extends Fragment {
         true_taenzer = getString(R.string.true_taenzer);
         true_taenzerin = getString(R.string.true_taenzerin);
 
-        trueMap.put("0",true_sonne);
-        trueMap.put("1",true_cool);
-        trueMap.put("2",true_highfive);
-        trueMap.put("3",true_daumenhoch);
-        trueMap.put("4",true_hangloose);
-        trueMap.put("5",true_ass);
-        trueMap.put("6",true_doppelhaende);
-        trueMap.put("7",true_fuchs);
-        trueMap.put("8",true_applaus);
-        trueMap.put("9",true_victory);
-        trueMap.put("10",true_ok);
-        trueMap.put("11",true_hundert);
-        trueMap.put("12",true_supermann);
-        trueMap.put("13",true_superfrau);
-        trueMap.put("14",true_gluehbirne);
-        trueMap.put("15",true_delfin);
-        trueMap.put("16",true_stark);
-        trueMap.put("17",true_brain);
-        trueMap.put("18",true_shakehands);
-        trueMap.put("19",true_nerd);
-        trueMap.put("20",true_dartscheibe);
-        trueMap.put("21",true_taenzer);
-        trueMap.put("22",true_taenzerin);
+        trueMap.put("0", true_sonne);
+        trueMap.put("1", true_cool);
+        trueMap.put("2", true_highfive);
+        trueMap.put("3", true_daumenhoch);
+        trueMap.put("4", true_hangloose);
+        trueMap.put("5", true_ass);
+        trueMap.put("6", true_doppelhaende);
+        trueMap.put("7", true_fuchs);
+        trueMap.put("8", true_applaus);
+        trueMap.put("9", true_victory);
+        trueMap.put("10", true_ok);
+        trueMap.put("11", true_hundert);
+        trueMap.put("12", true_supermann);
+        trueMap.put("13", true_superfrau);
+        trueMap.put("14", true_gluehbirne);
+        trueMap.put("15", true_delfin);
+        trueMap.put("16", true_stark);
+        trueMap.put("17", true_brain);
+        trueMap.put("18", true_shakehands);
+        trueMap.put("19", true_nerd);
+        trueMap.put("20", true_dartscheibe);
+        trueMap.put("21", true_taenzer);
+        trueMap.put("22", true_taenzerin);
     }
-    public void generateFalseReactionMaps(){
+
+    public void generateFalseReactionMaps() {
 
         falseMap = new HashMap<>();
         false_rotfl = getString(R.string.false_rotfl);
@@ -2475,41 +2430,33 @@ public class MainFragment extends Fragment {
         false_uebelkeit = getString(R.string.false_uebelkeit);
         false_kotzen = getString(R.string.false_kotzen);
 
-        falseMap.put("0",false_rotfl);
-        falseMap.put("1",false_augenbrauen);
-        falseMap.put("2",false_pinoccio);
-        falseMap.put("3",false_notamused);
-        falseMap.put("4",false_rollendeaugen);
-        falseMap.put("5",false_monokkel);
-        falseMap.put("6",false_pst);
-        falseMap.put("7",false_betrunken);
-        falseMap.put("8",false_keinmund);
-        falseMap.put("9",false_spiralaugen);
-        falseMap.put("10",false_verwirrt);
-        falseMap.put("11",false_schlafweiter);
-        falseMap.put("12",false_kopfexplodiert);
-        falseMap.put("13",false_fluchen);
-        falseMap.put("14",false_heulen);
-        falseMap.put("15",false_dampfablassen);
-        falseMap.put("16",false_facepalm);
-        falseMap.put("17",false_zombie);
-        falseMap.put("18",false_uebelkeit);
-        falseMap.put("19",false_kotzen);
+        falseMap.put("0", false_rotfl);
+        falseMap.put("1", false_augenbrauen);
+        falseMap.put("2", false_pinoccio);
+        falseMap.put("3", false_notamused);
+        falseMap.put("4", false_rollendeaugen);
+        falseMap.put("5", false_monokkel);
+        falseMap.put("6", false_pst);
+        falseMap.put("7", false_betrunken);
+        falseMap.put("8", false_keinmund);
+        falseMap.put("9", false_spiralaugen);
+        falseMap.put("10", false_verwirrt);
+        falseMap.put("11", false_schlafweiter);
+        falseMap.put("12", false_kopfexplodiert);
+        falseMap.put("13", false_fluchen);
+        falseMap.put("14", false_heulen);
+        falseMap.put("15", false_dampfablassen);
+        falseMap.put("16", false_facepalm);
+        falseMap.put("17", false_zombie);
+        falseMap.put("18", false_uebelkeit);
+        falseMap.put("19", false_kotzen);
     }
 
-
-    //};
-
-    // builder.setOnClickListener(listener);
-    void setNumberValues() {
-        if (numberMax == 0) {
-            numberMax = 100;
-        }
-    }
 
     int getColorTheme() {
-        switch (gameMode) {
-            case 1:Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.zahlenbackgrnd);
+        switch (MyViewModel.gameMode.getStatus()) {
+            case 1:
+                Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.zahlenbackgrnd);
                 break;
             case 3:
                 bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.grid3_chess_grad_backgrnd_sm);
@@ -2523,6 +2470,10 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 //color = (getResources().getColor(R.color.Grau_Hintergrund));
                 break;
         }
@@ -2531,14 +2482,15 @@ public class MainFragment extends Fragment {
     }
 
     void playLongClicked() {
-        switch (gameMode) {    //Flaggenspiel Fläche
+
+        switch (MyViewModel.gameMode.getStatus()) {    //Flaggenspiel Fläche
             case 2:
-            case 7:    {
+            case 7: {
                 try {
                     if (knopfNummer_lc - knopfNummerAlt_lc == 1) {
-                        Toast.makeText(getActivity(), getString(R.string.ask_landesflaeche) + readableNumbers((int) bigObjectArr[arrnummer][index + 1][detail]) + getString(R.string.ask_landesflaeche_einheit), LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), bigObjectArr[arrnummer][index + 1][1] + ", " + getString(R.string.ask_landesflaeche) + readableNumbers((int) bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]) + getString(R.string.ask_landesflaeche_einheit), LENGTH_LONG).show();
                     } else if (knopfNummer_lc - knopfNummerAlt_lc == 10) {
-                        Toast.makeText(getActivity(), getString(R.string.ask_landesflaeche) + readableNumbers((int) bigObjectArr[arrnummer + 1][index][detail]) + getString(R.string.ask_landesflaeche_einheit), LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), bigObjectArr[arrnummer + 1][index][1] + ", " + getString(R.string.ask_landesflaeche) + readableNumbers((int) bigObjectArr[arrnummer + 1][index][gameMode.getDetail()]) + getString(R.string.ask_landesflaeche_einheit), LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2559,13 +2511,13 @@ public class MainFragment extends Fragment {
                 knopfNummer_lc = knopfNummerAlt_lc;
                 break;
             case 4:
-            case 8:    {
+            case 8: {
 
                 try {
                     if (knopfNummer_lc - knopfNummerAlt_lc == 1) {
-                        Toast.makeText(getActivity(), getString(R.string.ask_einwohnerzahl) + readableNumbers((int) bigObjectArr[arrnummer][index + 1][detail]) + getString(R.string.ask_einwohnerzahl_einheit), LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), bigObjectArr[arrnummer][index + 1][1] + ", " + getString(R.string.ask_einwohnerzahl) + readableNumbers((int) bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]) + getString(R.string.ask_einwohnerzahl_einheit), LENGTH_LONG).show();
                     } else if (knopfNummer_lc - knopfNummerAlt_lc == 10) {
-                        Toast.makeText(getActivity(), getString(R.string.ask_einwohnerzahl) + readableNumbers((int) bigObjectArr[arrnummer + 1][index][detail]) + getString(R.string.ask_einwohnerzahl_einheit), LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), bigObjectArr[arrnummer + 1][index][1] + ", " + getString(R.string.ask_einwohnerzahl) + readableNumbers((int) bigObjectArr[arrnummer + 1][index][gameMode.getDetail()]) + getString(R.string.ask_einwohnerzahl_einheit), LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2586,65 +2538,53 @@ public class MainFragment extends Fragment {
         arrnummer = 0;
     }
 
-    public void setDetail() {  // MainActivity.detail entfernt (ist doch static)
-        switch (gameMode) {
-            case 2:
-            case 7:
-                detail = 3;
-                break;
-            case 4:
-            case 8:
-                detail = 4;
-                break;
+    public String getSnackbarInfo() {
+        String randomContriesStr = randomCountries();
+        switch (MyViewModel.gameMode.getStatus()) {
             case 5:
             case 9:
-                detail = 1;
+            case 11:
+            case 13:
+                Snackbar.make(layout, getString(R.string.landesname) + randomContriesStr, LENGTH_INDEFINITE).show();
                 break;
             case 6:
             case 10:
-                detail = 2;
+            case 12:
+            case 14:
+                Snackbar.make(layout, getString(R.string.landeshauptstadt) + randomContriesStr, LENGTH_INDEFINITE).show();
                 break;
-        }
-    }
-    public String getSnackbarInfo(){
-        String randomContriesStr = randomCountries();
-        switch (gameMode){
-            case 5:
-            case 9:
-                snackbar.make(layout,getString(R.string.landesname)+randomContriesStr,LENGTH_SHORT).show();
-            break;
-            case 6:
-            case 10:    snackbar.make(layout,getString(R.string.landeshauptstadt)+randomContriesStr,LENGTH_SHORT).show();
-            break;
         }
         return randomContriesStr;
     }
+
     public String randomCountries() {
-        random_num = randomWithRange(0,1);
-        String[] strArr = {(String) bigObjectArr[arrnummer][index+1][detail],(String) bigObjectArr[arrnummer+1][index][detail]};
+        random_num = randomWithRange(0, 1);
+        String[] strArr = {String.valueOf(bigObjectArr[arrnummer][index + 1][gameMode.getDetail()]), String.valueOf(bigObjectArr[arrnummer + 1][index][gameMode.getDetail()])};
         return strArr[random_num];
     }
+
     public String readableNumbers(int inputInt) {
-       // return String.format("%,d", inputInt);
-        return String.format(getLocale(),"%,d",inputInt);
+        // return String.format("%,d", inputInt);
+        return String.format(getLocale(), "%,d", inputInt);
     }
+
     public Locale getLocale() {
         Locale locale = getResources().getConfiguration().locale;
         return locale;
     }
-    public void indexScroll(){
+
+    public void indexScroll() {
         curX += btnArr[arrnummer][index + 1].getWidth();
         valueX += btnArr[arrnummer][index + 1].getWidth();
-       // curX += buttonWidth;
-       // valueX += buttonWidth;
+        // curX += buttonWidth;
+        // valueX += buttonWidth;
         curY = 0;
-        ObjectAnimator animator= ObjectAnimator.ofInt(horizontalScrollView,"scrollX",valueX);
+        ObjectAnimator animator = ObjectAnimator.ofInt(horizontalScrollView, "scrollX", valueX);
         animator.setDuration(800);
         animator.start();
-        //horizontalScrollView.scrollBy((int) (curX), (int) (curY));
-        mx = curX;
-        my = curY;
     }
+
+
     // todo scroll the whole time
     // todo try to use arrayadapter for gridview and scroll endlessly
     // todo try to change gamemodes on the fly (controlled by Runnable ??)
@@ -2652,32 +2592,31 @@ public class MainFragment extends Fragment {
     // todo try to introduce wayyyy more fun-gamemodes : reaction...
     // todo try to introduce bombing
 
-    public void testIndexScroll(int dur){
-        curX += (btnArr[arrnummer][index + 1].getWidth()*gridLength);
-        valueX += (btnArr[arrnummer][index + 1].getWidth()*gridLength);
+    public void testIndexScroll(int dur) {
+        curX += (btnArr[arrnummer][index + 1].getWidth() * MyViewModel.gridLength);
+        valueX += (btnArr[arrnummer][index + 1].getWidth() * MyViewModel.gridLength);
         // curX += buttonWidth;
         // valueX += buttonWidth;
         curY = 0;
-        ObjectAnimator animator= ObjectAnimator.ofInt(horizontalScrollView,"scrollX",valueX);
+        ObjectAnimator animator = ObjectAnimator.ofInt(horizontalScrollView, "scrollX", valueX);
         animator.setDuration(dur);
         animator.start();
         //horizontalScrollView.scrollBy((int) (curX), (int) (curY));
-        mx = curX;
-        my = curY;
+        float mx = curX;
+        float my = curY;
     }
 
-    private static String setButtonWidth(Context context)
-    {
+    private static void setButtonWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-      //  int dividend = 556, divisor = 9;
-      //  int quotient = dividend / divisor;
-      //  int remainder = dividend % divisor;
-        switch (gameMode) {
+        //  int dividend = 556, divisor = 9;
+        //  int quotient = dividend / divisor;
+        //  int remainder = dividend % divisor;
+        switch (MyViewModel.gameMode.getStatus()) {
             case 1:
             case 2:
             case 4:
@@ -2687,23 +2626,108 @@ public class MainFragment extends Fragment {
             case 8:
             case 9:
             case 10:
-
-            buttonWidth = width /4;
-          //  buttonWidth = width / gridLength;
-            buttonHeight = (buttonWidth * 3) / 4;
-            emojiSize = (buttonHeight * 3) / 12;
-            break;
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                //buttonWidth = width /4;
+                buttonWidth = width / MyViewModel.gridLength;
+                buttonHeight = (buttonWidth * 3) / 4;
+                emojiSize = (buttonHeight * 3) / 12;
+                break;
             case 3:
-                buttonWidth = width / gridLength;
+                buttonWidth = width / MyViewModel.gridLength;
                 buttonHeight = (buttonWidth * 3) / 4;
                 emojiSize = (buttonHeight * 3) / 15;
 
         }
-
-            return "" + width + " " + height;
-
     }
 
+    void startGame() {
 
+        resetValues();    // arrnumber auf 0 und index auf 0
+        resetColors();
+
+           
+        btnArr[0][0].setBackgroundColor(GREEN);
+        btnArr[0][0].setTextColor(Color.BLACK);
+        btnArr[0][0].setText(getString(R.string.gameinfo));
+        getActivity().setTitle(MyViewModel.titleBarString);
+        setButtonWidth(getActivity());
+        if(animIndex!=null) animIndex.stop();
+        if(animArrnummer!=null) animArrnummer.stop();
+        animIndex = new ButtonColorAnimatorIndex(btnArr[arrnummer][index + 1]);
+        animArrnummer = new ButtonColorAnimatorArrnummer(btnArr[arrnummer][index + 1]);
+        animIndex.invokeColorBackgroundAnimationIndex(btnArr[arrnummer][index + 1]);
+        animArrnummer.invokeColorBackgroundAnimationArrnummer(btnArr[arrnummer + 1][index]);
+        btnArr[arrnummer][index + 1].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
+        btnArr[arrnummer + 1][index].setBackgroundColor(getResources().getColor(R.color.Blau_Aktiv));
+        generateSoundLists();
+        snackBarShow();
+
+    }
+    public void soundLogic(final boolean answer){
+        if(answer){
+
+            badItr = badSoundsList.listIterator(0);
+
+            if (goodItr.hasNext()){
+                loadAndplaySound((Integer) goodItr.next());  // ListIterator.next() bekommt das audio file
+            }else {
+                goodItr = goodSoundsList.listIterator(0);
+                loadAndplaySound((Integer) goodItr.next());
+            }
+        } else {
+
+            goodItr = goodSoundsList.listIterator(0);
+
+            if(badItr.hasNext()){
+                loadAndplaySound((Integer) badItr.next());  /** soundArr hat 15 indexstellen, badSoundsList.size() == 8 !! **/
+            } else {
+                badItr = badSoundsList.listIterator(0);
+                loadAndplaySound((Integer) badItr.next());
+            }
+        }
+    }
+
+    public void loadAndplaySound(final int soundInt) {
+
+        Runnable playRightSoundRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mSound.play(soundArr[soundInt], 1.0f, 1.0f, 1, 0, 1.0f);
+            }
+        };
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            Future runningTaskFuture = executorService.submit(playRightSoundRunnable);
+            playRightSoundRunnable.run();
+            runningTaskFuture.cancel(true);
+    }
+
+    void generateSoundLists() {
+        int temp = soundArr[randomWithRange(0, 7)];
+        goodSoundsList.add(temp);
+        goodSoundsList.add(temp);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodSoundsList.add(soundArr[randomWithRange(0, 7)]);
+        goodItr = goodSoundsList.listIterator(0);
+
+        temp = soundArr[randomWithRange(8, 15)];
+        badSoundsList.add(temp);
+        badSoundsList.add(temp);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badSoundsList.add(soundArr[randomWithRange(8, 15)]);
+        badItr = badSoundsList.listIterator(0);
+
+    }
 
 }

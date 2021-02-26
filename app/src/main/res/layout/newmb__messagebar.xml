@@ -23,7 +23,7 @@
             android:background="@null"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="256sp" />
+            android:textSize="150sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -6,7 +6,7 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.widget.Button;
 
-import static net.juntermanns.mybuttons.MainActivity.gameMode;
+import static net.juntermanns.mybuttons.ui.main.MyViewModel.gameMode;
 
 public class ButtonColorAnimatorArrnummer implements Runnable {
     private Boolean isRunning;
@@ -31,9 +31,9 @@ public class ButtonColorAnimatorArrnummer implements Runnable {
     }
 
 
-    public void invokeColorTextAnimationArrnummer(Button btnArrnummer) {
-        colorAnim2 = ObjectAnimator.ofInt(btnArrnummer, "textColor", Color.WHITE, Color.MAGENTA);
-        colorAnim2.setDuration(555);
+    public void invokeColorTextAnimationArrnummer(Button btnArrnummer) {                                                      /** Animator animiert zwei Felder **/
+        colorAnim2 = ObjectAnimator.ofInt(btnArrnummer, "textColor", Color.BLACK, Color.MAGENTA);
+        colorAnim2.setDuration(1000);
         colorAnim2.setEvaluator(new ArgbEvaluator());
         colorAnim2.setRepeatCount(ValueAnimator.INFINITE);
         colorAnim2.setRepeatMode(ValueAnimator.REVERSE);
@@ -41,7 +41,7 @@ public class ButtonColorAnimatorArrnummer implements Runnable {
     }
     public void invokeColorBackgroundAnimationArrnummer(Button btnArrnummer) {
         colorAnim2 = ObjectAnimator.ofInt(btnArrnummer, "BackgroundColor", Color.WHITE, Color.GRAY);
-        colorAnim2.setDuration(1111);
+        colorAnim2.setDuration(1000);
         colorAnim2.setEvaluator(new ArgbEvaluator());
         colorAnim2.setRepeatCount(ValueAnimator.INFINITE);
         colorAnim2.setRepeatMode(ValueAnimator.REVERSE);
@@ -49,11 +49,11 @@ public class ButtonColorAnimatorArrnummer implements Runnable {
     }
 
     public void invokeColor(Button btn){
-        switch (gameMode){
+        switch (gameMode.getStatus()){
             case 1:
             case 3:
-                colorAnim2 = ObjectAnimator.ofInt(btn, "textColor", Color.WHITE, Color.MAGENTA);
-                colorAnim2.setDuration(555);
+                colorAnim2 = ObjectAnimator.ofInt(btn, "textColor", Color.BLACK, Color.MAGENTA);
+                colorAnim2.setDuration(1000);
                 colorAnim2.setEvaluator(new ArgbEvaluator());
                 colorAnim2.setRepeatCount(ValueAnimator.INFINITE);
                 colorAnim2.setRepeatMode(ValueAnimator.REVERSE);
@@ -67,8 +67,12 @@ public class ButtonColorAnimatorArrnummer implements Runnable {
             case 8:
             case 9:
             case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
                 colorAnim2 = ObjectAnimator.ofInt(btn, "BackgroundColor", Color.WHITE, Color.GRAY);
-                colorAnim2.setDuration(1111);
+                colorAnim2.setDuration(1000);
                 colorAnim2.setEvaluator(new ArgbEvaluator());
                 colorAnim2.setRepeatCount(ValueAnimator.INFINITE);
                 colorAnim2.setRepeatMode(ValueAnimator.REVERSE);

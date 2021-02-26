@@ -27,7 +27,7 @@
             android:id="@+id/a1"
             android:layout_gravity="start|top"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:background="@null"
             android:onClick="func_a1"
@@ -38,7 +38,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_a2"
             custom:onKeyLongPress="func_long_a2"/>
@@ -48,7 +48,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_a3"
             custom:onKeyLongPress="func_long_a3"/>
@@ -59,7 +59,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_b1"
             custom:onKeyLongPress="func_long_b1"/>
@@ -69,7 +69,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_b2"
             custom:onKeyLongPress="func_long_b2"/>
@@ -79,7 +79,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_b3"
             custom:onKeyLongPress="func_long_b3"/>
@@ -90,7 +90,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_c1"
             custom:onKeyLongPress="func_long_c1"/>
@@ -100,7 +100,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_c2"
             custom:onKeyLongPress="func_long_c2"/>
@@ -111,7 +111,7 @@
             android:layout_gravity="start|top"
             android:background="@null"
             android:text="Button"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="45dp"
             android:onClick="func_c3"
             custom:onKeyLongPress="func_long_c3"/>
@@ -132,20 +132,10 @@
             android:id="@+id/btn_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RANGE"
+            android:text="MODUS"
             android:onClick="func_range"/>
 
-        <Button
-            android:id="@+id/btn_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NEW" />
 
-        <Button
-            android:id="@+id/btn_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NEXT" />
     </LinearLayout>
 
 </RelativeLayout>

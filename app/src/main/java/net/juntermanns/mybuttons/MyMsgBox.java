@@ -48,7 +48,7 @@ public class MyMsgBox {
         mTextView =  v.findViewById(R.id.reactionButton);
         mFadeInAnimation = new AlphaAnimation(0.0f, 0.1f);
         mFadeOutAnimation = new AlphaAnimation(5.0f, 0.0f);
-        mFadeOutAnimation.setDuration(2000);
+        mFadeOutAnimation.setDuration(800);
         mFadeOutAnimation
                 .setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -93,5 +93,6 @@ public class MyMsgBox {
 
         }
     };
+
 
 }

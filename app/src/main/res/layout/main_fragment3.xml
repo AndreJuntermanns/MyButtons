@@ -34,7 +34,7 @@
                 android:background="@null"
                 android:onClick="func_a1"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_a1"
                 tools:background="@null" />
@@ -45,7 +45,7 @@
                 android:background="@null"
                 android:onClick="func_a2"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_a2" />
 
@@ -55,7 +55,7 @@
                 android:background="@null"
                 android:onClick="func_a3"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_a3" />
 
@@ -65,7 +65,7 @@
                 android:background="@null"
                 android:onClick="func_a4"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_a4" />
 
@@ -75,7 +75,7 @@
                 android:background="@null"
                 android:onClick="func_a5"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_a5" />
 
@@ -85,7 +85,7 @@
                 android:background="@null"
                 android:onClick="func_b1"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_b1" />
 
@@ -95,7 +95,7 @@
                 android:background="@null"
                 android:onClick="func_b2"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_b2" />
 
@@ -105,7 +105,7 @@
                 android:background="@null"
                 android:onClick="func_b3"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_b3" />
 
@@ -115,7 +115,7 @@
                 android:background="@null"
                 android:onClick="func_b4"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_b4" />
 
@@ -125,7 +125,7 @@
                 android:background="@null"
                 android:onClick="func_b5"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_b5" />
 
@@ -135,7 +135,7 @@
                 android:background="@null"
                 android:onClick="func_c1"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_c1" />
 
@@ -145,7 +145,7 @@
                 android:background="@null"
                 android:onClick="func_c2"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_c2" />
 
@@ -155,7 +155,7 @@
                 android:background="@null"
                 android:onClick="func_c3"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_c3" />
 
@@ -165,7 +165,7 @@
                 android:background="@null"
                 android:onClick="func_c4"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_c4" />
 
@@ -175,7 +175,7 @@
                 android:background="@null"
                 android:onClick="func_c5"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_c5" />
 
@@ -185,7 +185,7 @@
                 android:background="@null"
                 android:onClick="func_d1"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_d1" />
 
@@ -195,7 +195,7 @@
                 android:background="@null"
                 android:onClick="func_d2"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_d2" />
 
@@ -205,7 +205,7 @@
                 android:background="@null"
                 android:onClick="func_d3"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_d3" />
 
@@ -215,7 +215,7 @@
                 android:background="@null"
                 android:onClick="func_d4"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_d4" />
 
@@ -225,7 +225,7 @@
                 android:background="@null"
                 android:onClick="func_d5"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_d5" />
 
@@ -235,7 +235,7 @@
                 android:background="@null"
                 android:onClick="func_e1"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_e1" />
 
@@ -246,7 +246,7 @@
                 android:onClick="func_e2"
                 android:text="Button"
 
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_e2" />
 
@@ -256,7 +256,7 @@
                 android:background="@null"
                 android:onClick="func_e3"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_e3" />
 
@@ -266,7 +266,7 @@
                 android:background="@null"
                 android:onClick="func_e4"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_e4" />
 
@@ -276,7 +276,7 @@
                 android:background="@null"
                 android:onClick="func_e5"
                 android:text="Button"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="45dp"
                 custom:onKeyLongPress="func_long_e5" />
 
@@ -295,20 +295,8 @@
             android:id="@+id/btn_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="func_range"
-            android:text="RANGE" />
-
-        <Button
-            android:id="@+id/btn_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NEW" />
-
-        <Button
-            android:id="@+id/btn_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NEXT" />
+            android:text="MODUS"
+            android:onClick="func_range"/>
 
     </LinearLayout>
 

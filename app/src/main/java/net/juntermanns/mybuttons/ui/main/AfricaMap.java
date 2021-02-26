@@ -1,0 +1,177 @@
+package net.juntermanns.mybuttons.ui.main;
+
+import java.util.HashMap;
+
+public class AfricaMap {
+    public static HashMap<String, Object[]> africaMap = new HashMap<>();
+
+    private String algeria;
+    private String angola;
+    private String benin;
+    private String botswana;
+    private String burkinafaso;
+    private String burundi;
+    private String capeverde;
+    private String cameroon;
+    private String centralafricanrepublic;
+    private String chad;
+    private String comoros;
+    private String congo;
+    private String cotedivoire;
+    private String djibouti;
+    private String egypt;
+    private String equatorialguinea;
+    private String eritrea;
+    private String eswatini;
+    private String ethiopia;
+    private String gabon;
+    private String gambia;
+    private String ghana;
+    private String guinea;
+    private String guineabissau;
+    private String kenya;
+    private String lesotho;
+    private String liberia;
+    private String libya;
+    private String madagascar;
+    private String malawi;
+    private String mali;
+    private String mauritania;
+    private String mauritius;
+    private String morocco;
+    private String mozambique;
+    private String namibia;
+    private String niger;
+    private String nigeria;
+    private String rwanda;
+    private String saotomeandprincipe;
+    private String senegal;
+    private String seychelles;
+    private String sierraleone;
+    private String somalia;
+    private String southafrica;
+    private String southsudan;
+    private String sudan;
+    private String tanzania;
+    private String togo;
+    private String tunisia;
+    private String uganda;
+    private String zambia;
+    private String zimbabwe;
+
+    public AfricaMap(){
+        algeria =  "🇩🇿";
+        angola = "🇦🇴" ;
+        benin =  "🇧🇯";
+        botswana =  "🇧🇼";
+        burkinafaso = "🇧🇫" ;
+        burundi =  "🇧🇮";
+        capeverde =  "🇨🇻";
+        cameroon = "🇨🇲" ;
+        centralafricanrepublic =  "🇨🇫";
+        chad = "🇹🇩" ;
+        comoros =  "🇰🇲";
+        congo = "🇨🇬" ;
+        cotedivoire = "🇨🇮" ;
+        djibouti =  "🇩🇯";
+        egypt = "🇪🇬" ;
+        equatorialguinea = "🇬🇶" ;
+        eritrea =  "🇪🇷";
+        eswatini = "🇸🇿" ;
+        ethiopia = "🇪🇹" ;
+        gabon = "🇬🇦" ;
+        gambia =  "🇬🇲";
+        ghana =  "🇬🇭" ;
+        guinea =  "🇬🇳";
+        guineabissau =  "🇬🇼";
+        kenya = "🇰🇪" ;
+        lesotho = "🇱🇸" ;
+        liberia =  "🇱🇷";
+        libya =  "🇱🇾";
+        madagascar =  "🇲🇬";
+        malawi =  "🇲🇼";
+        mali = "🇲🇱" ;
+        mauritania = "🇲🇷" ;
+        mauritius =  "🇲🇺";
+        morocco = "🇲🇦" ;
+        mozambique =  "🇲🇿";
+        namibia =  "🇳🇦";
+        niger =  "🇳🇪";
+        nigeria = "🇳🇬" ;
+        rwanda = "🇷🇼" ;
+        saotomeandprincipe = "🇸🇹" ;
+        senegal =  "🇸🇳";
+        seychelles =  "🇸🇨";
+        sierraleone = "🇸🇱" ;
+        somalia = "🇸🇴" ;
+        southafrica = "🇿🇦" ;
+        southsudan = "🇸🇸"  ;
+        sudan =  "🇸🇩";
+        tanzania = "🇹🇿" ;
+        togo =  "🇹🇬";
+        tunisia = "🇹🇳" ;
+        uganda = "🇺🇬" ;
+        zambia = "🇿🇲" ;
+        zimbabwe = "🇿🇼" ;
+
+    }
+
+    public static AfricaMap getAfricaMap(AfricaMap instanz) {
+
+        africaMap.put("0", new Object[]{instanz.angola, "Angola", "Luanda", 322463, 26260582});
+        africaMap.put("1", new Object[]{instanz.benin, "Benin", "Porto-Novo", 322463, 26260582});
+        africaMap.put("2", new Object[]{instanz.botswana, "Botswana", "Gaborone", 322463, 26260582});
+        africaMap.put("3", new Object[]{instanz.burkinafaso, "Burkina Faso", "Ouagadougou", 322463, 26260582});
+        africaMap.put("4", new Object[]{instanz.burundi, "Burundi", "Gitega", 322463, 26260582});
+        africaMap.put("5", new Object[]{instanz.capeverde, "Kapverdische Inseln", "Praia", 322463, 26260582});
+        africaMap.put("6", new Object[]{instanz.cameroon, "Kamerun", "Jaunde", 322463, 26260582});
+        africaMap.put("7", new Object[]{instanz.centralafricanrepublic , "Zentralafrika", "Bangui", 322463, 26260582});
+        africaMap.put("8", new Object[]{instanz.chad , "Tschad", "N'Djamena", 322463, 26260582});
+        africaMap.put("9", new Object[]{instanz.comoros , "Komoren", "Moroni", 322463, 26260582});
+        africaMap.put("10", new Object[]{instanz.congo , "Kongo", "Kinshasa", 322463, 26260582});
+        africaMap.put("11", new Object[]{instanz.cotedivoire, "Elfenbeinküste", "Yamoussoukro", 322463, 26260582});
+        africaMap.put("12", new Object[]{instanz.djibouti, "Dschibuti", "Dschibuti", 23200 , 865267});
+        africaMap.put("13", new Object[]{instanz.egypt , "Ägypten", "Kairo", 322463, 26260582});
+        africaMap.put("14", new Object[]{instanz.equatorialguinea, "Äquatorialguinea", "Malabo", 28051 , 1309000});
+        africaMap.put("15", new Object[]{instanz.eritrea , "Eritrea", "Asmara", 322463, 26260582});
+        africaMap.put("16", new Object[]{instanz.eswatini , "Eswatini", "Mbabane", 322463, 26260582});
+        africaMap.put("17", new Object[]{instanz.ethiopia , "Äthiopien", "Addis Abeba", 322463, 26260582});
+        africaMap.put("18", new Object[]{instanz.gabon , "Gabon", "Libreville", 322463, 26260582});
+        africaMap.put("19", new Object[]{instanz.gambia , "Gambia", "Banjul", 322463, 26260582});
+        africaMap.put("20", new Object[]{instanz.ghana , "Ghana", "Accra", 322463, 26260582});
+        africaMap.put("21", new Object[]{instanz.guinea , "Guinea", "Conakry", 322463, 26260582});
+        africaMap.put("22", new Object[]{instanz.guineabissau , "Guinea-Bissau", "Bissau", 322463, 26260582});
+        africaMap.put("23", new Object[]{instanz.kenya , "Kenia", "Nairobi", 322463, 26260582});
+        africaMap.put("24", new Object[]{instanz.lesotho , "Lesotho", "Maseru", 322463, 26260582});
+        africaMap.put("25", new Object[]{instanz.liberia , "Liberia", "Monrovia", 322463, 26260582});
+        africaMap.put("26", new Object[]{instanz.libya , "Libyen", "Tripolis", 322463, 26260582});
+        africaMap.put("27", new Object[]{instanz.madagascar , "Madagaskar", "Antananarivo", 322463, 26260582});
+        africaMap.put("28", new Object[]{instanz.malawi , "Malawi", "Lilongwe", 322463, 26260582});
+        africaMap.put("29", new Object[]{instanz.mali , "Mali", "Bamako", 322463, 26260582});
+        africaMap.put("30", new Object[]{instanz.mauritania , "Mauretanien", "Nuakschott", 322463, 26260582});
+        africaMap.put("31", new Object[]{instanz.morocco , "Marokko", "Rabat", 322463, 26260582});
+        africaMap.put("32", new Object[]{instanz.mozambique , "Mosambik", "Maputo", 322463, 26260582});
+        africaMap.put("33", new Object[]{instanz.namibia , "Namibia", "Windhuk", 322463, 26260582});
+        africaMap.put("34", new Object[]{instanz.niger , "Niger", "Niamey", 322463, 26260582});
+        africaMap.put("35", new Object[]{instanz.nigeria , "Nigeria", "Abuja", 322463, 26260582});
+        africaMap.put("36", new Object[]{instanz.rwanda , "Ruanda", "Kigali", 322463, 26260582});
+        africaMap.put("37", new Object[]{instanz.saotomeandprincipe , "São Tomé und Príncipe", "São Tomé", 322463, 26260582});
+        africaMap.put("38", new Object[]{instanz.senegal , "Senegal", "Dakar", 322463, 26260582});
+        africaMap.put("39", new Object[]{instanz.seychelles , "Seychellen", "Victoria", 322463, 26260582});
+        africaMap.put("40", new Object[]{instanz.sierraleone , "Sierra leone", "Freetown", 322463, 26260582});
+        africaMap.put("41", new Object[]{instanz.somalia , "Somalia", "Mogadischu", 322463, 26260582});
+        africaMap.put("42", new Object[]{instanz.southafrica , "Südafrika", "Kapstadt", 322463, 26260582});
+        africaMap.put("43", new Object[]{instanz.southsudan , "Südsudan", "Juba", 322463, 26260582});
+        africaMap.put("44", new Object[]{instanz.sudan , "Sudan", "Khartum", 322463, 26260582});
+        africaMap.put("45", new Object[]{instanz.tanzania , "Tansania", "Dodoma", 322463, 26260582});
+        africaMap.put("46", new Object[]{instanz.togo , "Togo", "Lomé", 322463, 26260582});
+        africaMap.put("47", new Object[]{instanz.tunisia , "Tunesien", "Tunis", 322463, 26260582});
+        africaMap.put("48", new Object[]{instanz.uganda , "Uganda", "Kampala", 322463, 26260582});
+        africaMap.put("49", new Object[]{instanz.zambia , "Sambia", "Lusaka", 322463, 26260582});
+        africaMap.put("50", new Object[]{instanz.zimbabwe , "Simbabwe", "Harare", 322463, 26260582});
+
+        return instanz;
+    }
+}
+
+

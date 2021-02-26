@@ -1,21 +1,20 @@
-package net.juntermanns.mybuttons.ui.main;
+/*package net.juntermanns.mybuttons.ui.main;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import net.juntermanns.mybuttons.MyEmojiButton;
 
 public class MainViewModel extends ViewModel {
 
-     /*   private MutableLiveData<List<User>> users;
-        public LiveData<List<User>> getUsers() {
-            if (users == null) {
-                users = new MutableLiveData<List<User>>();
-                loadUsers();
+       private MutableLiveData<MyEmojiButton[][]> liveButtonArray = new MutableLiveData<>();
+        public LiveData<MyEmojiButton[][]> getLiveButtonArray() {
+            if (liveButtonArray == null) {
+                liveButtonArray = new MutableLiveData<>();
             }
-            return users;
+            return liveButtonArray;
         }
 
-        private void loadUsers() {
-            // Do an asynchronous operation to fetch users.
-        }
-    }*/
-    // TODO: Implement the ViewModel
-}
+    }
+    // TODO: Implement the ViewModel*/
+
